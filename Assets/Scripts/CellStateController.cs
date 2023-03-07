@@ -15,18 +15,24 @@ public class CellStateController : MonoBehaviour
 
     public void SetCellStateOnNextGeneration(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
     {
-        isCellAliveOnNextGeneration = currentCell.IsAlive;
-
         int nbOfLivingNeighbours = neighboursList.Count(cell => cell.IsAlive);
 
-        bool hasWrongAmountOfLivingNeighbours = nbOfLivingNeighbours < minAmountOfAliveNeighbours || nbOfLivingNeighbours > maxAmountOfAliveNeighbours;
-
-        if (hasWrongAmountOfLivingNeighbours)
-            isCellAliveOnNextGeneration = false;
-        
-        if(nbOfLivingNeighbours == amountOfAliveNeighboursToLive)
+        if (nbOfLivingNeighbours == amountOfAliveNeighboursToLive)
+        {
             isCellAliveOnNextGeneration = true;
+            return;
+        }
+
+        bool isUnderpopulated = nbOfLivingNeighbours < minAmountOfAliveNeighbours;
+        bool isOverpopulated = nbOfLivingNeighbours > maxAmountOfAliveNeighbours;
+
+        if(isUnderpopulated || isOverpopulated) 
+            isCellAliveOnNextGeneration = false;
+        else
+            DontChangeOnNextGeneration();
     }
+
+    public void DontChangeOnNextGeneration() => isCellAliveOnNextGeneration = currentCell.IsAlive;
 
     public void ChangeToNewState()
     {

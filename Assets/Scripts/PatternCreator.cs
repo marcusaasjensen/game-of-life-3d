@@ -3,9 +3,9 @@ using UnityEngine;
 public class PatternCreator
 {
     public delegate void CreatePattern(Vector3Int position);
-    public enum AliveCellsPatternName { Block3D, Tub3D, TetrisBlock }
+    public enum AliveCellsPatternName { Block3D, Tub3D, UpTetrisBlock }
 
-    static readonly CreatePattern[] createPatternFunctions = { CreateBlock3D, CreateTub3D, CreateTetrisBlock };
+    static readonly CreatePattern[] createPatternFunctions = { CreateBlock3D, CreateTub3D, CreateUpTetrisBlock };
     public static void CreateNewPattern(AliveCellsPatternName name, Vector3Int position) => createPatternFunctions[(int)name](position);
 
     static void CreateBlock3D(Vector3Int position)
@@ -30,7 +30,7 @@ public class PatternCreator
         CellManager.GetCellAtPosition(new(position.x + 1, position.y + 2, position.z + 1))?.Live();
     }
 
-    static void CreateTetrisBlock(Vector3Int position)
+    static void CreateUpTetrisBlock(Vector3Int position)
     {
         CellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
         CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();

@@ -18,24 +18,30 @@ public class GameOfLifeController : MonoBehaviour
     void Awake() => cellManager = cellManager ? cellManager : GetComponent<CellManager>();
     void Start() { if (playOnStart) StartGameOfLife(); }
 
-    [ContextMenu("Set Initial Alive Cells Pattern At Initial Position")]
-    void InstantiateInitialAliveCellsPattern() => SetInitialAliveCells(initialAliveCellsPattern, initialPatternPosition);
+    [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
+    void InstantiateInitialAliveCellsPattern()
+    {
+        SetInitialAliveCells(initialAliveCellsPattern, initialPatternPosition);
+        SkipGeneration();
+    }
     public void SetInitialAliveCells(PatternCreator.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => PatternCreator.CreateNewPattern(aliveCellsPattern, initialPosition);
 
-    [ContextMenu("Move On To Next Generation")]
+    [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
-    {
-        PrepareNextGeneration();
-        ChangeAllCellState();
-    }
-
-    void PrepareNextGeneration()
     {
         foreach (CellStateController cell in CellManager.CellList)
             cell.SetCellStateOnNextGeneration(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
+        ActualizeAllCellState();
     }
 
-    void ChangeAllCellState()
+    void SkipGeneration()
+    {
+        foreach (CellStateController cell in CellManager.CellList)
+            cell.DontChangeOnNextGeneration();
+        ActualizeAllCellState();
+    }
+
+    void ActualizeAllCellState()
     {
         foreach (CellStateController cell in CellManager.CellList)
         {
@@ -44,12 +50,22 @@ public class GameOfLifeController : MonoBehaviour
         }
     }
 
-    [ContextMenu("Start Game Of Life")]
+    [ContextMenu("Game Of Life/Start Game Of Life")]
     void StartGameOfLife()
     {
         InstantiateInitialAliveCellsPattern();
         StartGameOfLifeCoroutine();
     }
+
+    [ContextMenu("Game Of Life/Reset Game of Life")]
+    void ResetGameOfLife()
+    {
+        foreach (CellStateController cell in CellManager.CellList)
+            cell.CurrentCell.Die();
+    }
+
+    [ContextMenu("Game Of Life/Continue Game Of Life")]
+    void ContinueGameOfLife() => StartGameOfLifeCoroutine();
 
     void StartGameOfLifeCoroutine()
     {
@@ -60,7 +76,7 @@ public class GameOfLifeController : MonoBehaviour
         StartCoroutine(GameOfLifeCoroutine());
     }
 
-    [ContextMenu("Stop Game Of Life")]
+    [ContextMenu("Game Of Life/Stop Game Of Life")]
     void StopGameOfLife()
     {
         _isGameRunning = false;
