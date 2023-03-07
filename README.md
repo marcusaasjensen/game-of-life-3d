@@ -2,7 +2,7 @@
 Conway's Game Of Life made in 3D with adjustable rules.
 Made with Unity 3D.
 
-# Example
+## Example
 Grid size: 10x10x10
 
 Rules:
@@ -11,6 +11,7 @@ Rules:
 - Amount of alive neighbours to live: 4
 
 Initial pattern: Block3D
+
 Initial pattern position: (5,5,5)
 
 ![](./Images/gameoflife3d.gif)
