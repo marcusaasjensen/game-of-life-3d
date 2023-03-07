@@ -6,15 +6,11 @@ public class CellStateController : MonoBehaviour
 {
     [SerializeField] Cell currentCell;
     [SerializeField] List<Cell> neighboursList;
-    [SerializeField] bool isCellAliveOnNextGeneration = false;
+    [SerializeField] bool isCellAliveOnNextGeneration;
     public Cell CurrentCell { get { return currentCell; } }
-    public Cell CellNeighbourAtPosition(Vector3Int position)
-    {
-        foreach(Cell cell in neighboursList)
-            if(cell.Position == position) 
-                return cell;
-        return null;
-    }
+
+    void Awake() => isCellAliveOnNextGeneration = currentCell.IsAlive;
+
     public void AddCellNeighbour(Cell cell) => neighboursList?.Add(cell);
 
     public void SetCellStateOnNextGeneration(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)

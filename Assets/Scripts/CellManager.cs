@@ -6,10 +6,9 @@ public class CellManager : MonoBehaviour
     [SerializeField] Transform cellPrefab;
     [SerializeField] Transform deadCellsParent;
     [SerializeField] Transform aliveCellsParent;
-    [SerializeField] CellStateController [] cellList;
-    [SerializeField] int minAmountOfAliveNeighbours = 2;
-    [SerializeField] int maxAmountOfAliveNeighbours = 9;
-    [SerializeField] int amountOfAliveNeighboursToLive = 3;
+    [SerializeField] static CellStateController [] cellList;
+
+    public static CellStateController[] CellList { get { return cellList; } } 
 
     void Awake()
     {
@@ -34,7 +33,7 @@ public class CellManager : MonoBehaviour
                 }
     }
 
-    Cell GetCellAtPosition(Vector3Int position)
+    public static Cell GetCellAtPosition(Vector3Int position)
     {
         foreach(CellStateController cell in cellList)
         {
@@ -67,64 +66,6 @@ public class CellManager : MonoBehaviour
         }
     }
 
-    public void SetInitialAliveCells(AliveCellsPattern aliveCellsPattern, Vector3Int initialPosition) 
-    {
-        switch(aliveCellsPattern)
-        {
-            case AliveCellsPattern.Block3D:
-                CreateBlock3D(initialPosition);
-                break;
-            case AliveCellsPattern.Tub3D:
-                CreateTub3D(initialPosition);
-                break;
-            default:
-                break;
-        }
-    }
-
-    void CreateBlock3D(Vector3Int position)
-    {
-        GetCellAtPosition(position)?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
-        GetCellAtPosition(new(position.x, position.y, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x, position.y + 1, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y + 1, position.z + 1))?.Live();
-    }
-
-    void CreateTub3D(Vector3Int position)
-    {
-        GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x, position.y + 1, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x + 2, position.y + 1, position.z + 1))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y + 1, position.z + 2))?.Live();
-        GetCellAtPosition(new(position.x + 1, position.y + 2, position.z + 1))?.Live();
-    }
-
-    void SortCellGameObject(Cell cell) => cell.transform.SetParent(cell.IsAlive ? aliveCellsParent : deadCellsParent);
-
-    void PrepareNextGeneration()
-    {
-        foreach(CellStateController cell in cellList)
-            cell.SetCellStateOnNextGeneration(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
-    }
-
-    void ChangeAllCellState()
-    {
-        foreach (CellStateController cell in cellList)
-        {
-            cell.ChangeToNewState();
-            SortCellGameObject(cell.CurrentCell);
-        }
-    }
-
-    public void MoveOnToNextGeneration()
-    {
-        PrepareNextGeneration();
-        ChangeAllCellState();
-    }
+    public void SortCellGameObject(Cell cell) => cell.transform.SetParent(cell.IsAlive ? aliveCellsParent : deadCellsParent);
 
 }

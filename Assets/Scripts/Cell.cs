@@ -14,10 +14,8 @@ public class Cell : MonoBehaviour
 
     void Awake()
     {
-        _position.Set((int) transform.position.x, (int) transform.position.y, (int) transform.position.z);
-
-        if(!_currentMesh)
-            _currentMesh = GetComponent<MeshRenderer>();
+        _position = Vector3Int.FloorToInt(transform.position);
+        _currentMesh = _currentMesh ? _currentMesh : GetComponent<MeshRenderer>();
 
         Die();
     }
