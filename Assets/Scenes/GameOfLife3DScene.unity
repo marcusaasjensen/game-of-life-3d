@@ -405,7 +405,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1504666002}
   m_Layer: 0
-  m_Name: ------------------------ (1)
+  m_Name: ------------------------
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -437,6 +437,7 @@ GameObject:
   - component: {fileID: 1744172853}
   - component: {fileID: 1744172852}
   - component: {fileID: 1744172854}
+  - component: {fileID: 1744172855}
   m_Layer: 0
   m_Name: GameOfLife3D
   m_TagString: Untagged
@@ -459,8 +460,8 @@ MonoBehaviour:
   cellManager: {fileID: 1744172854}
   playOnStart: 1
   timeBetweenEachIteration: 0.1
-  initialAliveCellsPattern: 0
-  initialPatternPosition: {x: 5, y: 5, z: 5}
+  aliveCellsPattern: 0
+  patternPosition: {x: 5, y: 5, z: 5}
   minAmountOfAliveNeighbours: 3
   maxAmountOfAliveNeighbours: 4
   amountOfAliveNeighboursToLive: 4
@@ -495,6 +496,20 @@ MonoBehaviour:
   cellPrefab: {fileID: 12393739875170597, guid: 6a6bff6e5d81d734fb8bd7d7e9a63d90, type: 3}
   deadCellsParent: {fileID: 229545842}
   aliveCellsParent: {fileID: 390971348}
+--- !u!114 &1744172855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744172851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98f440b99ffda984b9b711147b66efc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameOfLife: {fileID: 1744172852}
+  color: {r: 1, g: 0.9203187, b: 0, a: 0.19607843}
 --- !u!1 &2109184354
 GameObject:
   m_ObjectHideFlags: 0

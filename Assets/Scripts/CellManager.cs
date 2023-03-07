@@ -8,6 +8,7 @@ public class CellManager : MonoBehaviour
     [SerializeField] Transform aliveCellsParent;
     [SerializeField] static CellStateController [] cellList;
 
+    public Vector3Int GridSize { get { return gridSize; } }
     public static CellStateController[] CellList { get { return cellList; } } 
 
     void Awake()

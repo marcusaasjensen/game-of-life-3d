@@ -4,16 +4,25 @@ using UnityEngine;
 public class GameOfLifeController : MonoBehaviour
 {
     [SerializeField] CellManager cellManager;
+
+    [Header("Simulation")]
     [SerializeField] bool playOnStart = true;
     [SerializeField] float timeBetweenEachIteration;
-    [SerializeField] PatternCreator.AliveCellsPatternName initialAliveCellsPattern = default;
-    [SerializeField] Vector3Int initialPatternPosition = Vector3Int.zero;
-    [SerializeField] int minAmountOfAliveNeighbours = 2;
-    [SerializeField] int maxAmountOfAliveNeighbours = 9;
-    [SerializeField] int amountOfAliveNeighboursToLive = 3;
+
+    [Header("Pattern Editing")]
+    [SerializeField] PatternCreator.AliveCellsPatternName aliveCellsPattern = default;
+    [SerializeField] Vector3Int patternPosition = Vector3Int.zero;
+    
+    [Header("Rules")]
+    [SerializeField] int minAmountOfAliveNeighbours = 3;
+    [SerializeField] int maxAmountOfAliveNeighbours = 4;
+    [SerializeField] int amountOfAliveNeighboursToLive = 4;
 
     bool _isGameRunning = false;
     IEnumerator _currentGameCoroutine;
+
+    public CellManager CellManager { get { return cellManager; } }
+    public Vector3Int InitialPatternPosition { get { return patternPosition; } }
 
     void Awake() => cellManager = cellManager ? cellManager : GetComponent<CellManager>();
     void Start() { if (playOnStart) StartGameOfLife(); }
@@ -21,7 +30,7 @@ public class GameOfLifeController : MonoBehaviour
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
     void InstantiateInitialAliveCellsPattern()
     {
-        SetInitialAliveCells(initialAliveCellsPattern, initialPatternPosition);
+        SetInitialAliveCells(aliveCellsPattern, patternPosition);
         SkipGeneration();
     }
     public void SetInitialAliveCells(PatternCreator.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => PatternCreator.CreateNewPattern(aliveCellsPattern, initialPosition);

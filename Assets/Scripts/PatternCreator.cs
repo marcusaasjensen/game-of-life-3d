@@ -37,6 +37,4 @@ public class PatternCreator
         CellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
         CellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
     }
-
-
 }
