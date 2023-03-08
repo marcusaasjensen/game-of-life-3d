@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CellManager : MonoBehaviour
 {
-    [SerializeField] Vector3Int gridSize = new(4, 4, 4);
+    [SerializeField, Min(0)] Vector3Int gridSize = new(4, 4, 4);
     [SerializeField] Transform cellPrefab;
     [SerializeField] Transform deadCellsParent;
     [SerializeField] Transform aliveCellsParent;
