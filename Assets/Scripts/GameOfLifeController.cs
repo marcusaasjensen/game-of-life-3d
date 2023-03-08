@@ -10,7 +10,7 @@ public class GameOfLifeController : MonoBehaviour
     [SerializeField] float timeBetweenEachIteration;
 
     [Header("Pattern Editing")]
-    [SerializeField] PatternCreator.AliveCellsPatternName aliveCellsPattern = default;
+    [SerializeField] AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern = default;
     [SerializeField] Vector3Int patternPosition = Vector3Int.zero;
     
     [Header("Rules")]
@@ -33,7 +33,7 @@ public class GameOfLifeController : MonoBehaviour
         SetInitialAliveCells(aliveCellsPattern, patternPosition);
         SkipGeneration();
     }
-    public void SetInitialAliveCells(PatternCreator.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => PatternCreator.CreateNewPattern(aliveCellsPattern, initialPosition);
+    public void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.CreateNewPattern(aliveCellsPattern, initialPosition);
 
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()

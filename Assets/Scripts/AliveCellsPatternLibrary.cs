@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PatternCreator
+public class AliveCellsPatternLibrary
 {
     public delegate void CreatePattern(Vector3Int position);
     public enum AliveCellsPatternName { Block3D, Tub3D, UpTetrisBlock }
