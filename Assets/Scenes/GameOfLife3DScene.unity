@@ -478,7 +478,7 @@ MonoBehaviour:
   timeBetweenEachIteration: 0.2
   aliveCellsPattern: 0
   patternPosition: {x: 10, y: 10, z: 10}
-  minAmountOfAliveNeighbours: 4
+  minAmountOfAliveNeighbours: 5
   maxAmountOfAliveNeighbours: 6
   amountOfAliveNeighboursToLive: 4
 --- !u!4 &1744172853

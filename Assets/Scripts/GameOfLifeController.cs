@@ -14,9 +14,11 @@ public class GameOfLifeController : MonoBehaviour
     [SerializeField] Vector3Int patternPosition = Vector3Int.zero;
     
     [Header("Rules")]
-    [SerializeField] int minAmountOfAliveNeighbours = 3;
-    [SerializeField] int maxAmountOfAliveNeighbours = 4;
+    [SerializeField] int minAmountOfAliveNeighbours = 5;
+    [SerializeField] int maxAmountOfAliveNeighbours = 6;
     [SerializeField] int amountOfAliveNeighboursToLive = 4;
+
+    //These default numbers are the 3D equivalent of the rules in 2D.
 
     bool _isGameRunning = false;
     IEnumerator _currentGameCoroutine;
