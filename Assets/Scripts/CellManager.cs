@@ -44,4 +44,11 @@ public class CellManager : MonoBehaviour
 
     public void SortCellGameObject(Cell cell) => cell.transform.SetParent(cell.IsAlive ? aliveCellsParent : deadCellsParent);
 
+    public bool IsPositionOutsideGrid(Vector3Int position)
+    {
+        bool isBelow = position.x < 0 || position.y < 0 || position.z < 0;
+        bool isAbove = position.x >= gridSize.x || position.y >= gridSize.y || position.z >= gridSize.z;
+        return isBelow || isAbove;
+    }
+
 }

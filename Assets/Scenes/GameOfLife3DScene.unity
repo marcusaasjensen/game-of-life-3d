@@ -476,7 +476,7 @@ MonoBehaviour:
   cellManager: {fileID: 1744172854}
   playOnStart: 1
   timeBetweenEachIteration: 0.1
-  aliveCellsPattern: 0
+  aliveCellsPattern: 2
   patternPosition: {x: 5, y: 5, z: 5}
   minAmountOfAliveNeighbours: 5
   maxAmountOfAliveNeighbours: 6
