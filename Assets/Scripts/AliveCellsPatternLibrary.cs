@@ -1,5 +1,4 @@
 using UnityEngine;
-
 public class AliveCellsPatternLibrary
 {
     public delegate void CreatePattern(Vector3Int position);
@@ -10,56 +9,56 @@ public class AliveCellsPatternLibrary
 
     static void CreateBlock3D(Vector3Int position)
     {
-        CellManager.GetCellAtPosition(position)?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x, position.y, position.z + 1))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z + 1))?.Live();
-        CellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z + 1))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z + 1))?.Live();
+        GridCellManager.GetCellAtPosition(position)?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z + 1))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z + 1))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z + 1))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z + 1))?.Live();
     }
 
     static void CreateTub(Vector3Int position)
     {
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x - 1, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x, position.y - 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y - 1, position.z))?.Live();
     }
 
     static void CreateTube(Vector3Int position)
     {
-        CellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 2, position.y - 1, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 2, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y - 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y + 1, position.z))?.Live();
 
-        CellManager.GetCellAtPosition(new(position.x - 2, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x - 2, position.y - 1, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x - 2, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y - 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y + 1, position.z))?.Live();
 
-        CellManager.GetCellAtPosition(new(position.x, position.y + 2, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x - 1, position.y + 2, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y + 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y + 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y + 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 2, position.z))?.Live();
 
-        CellManager.GetCellAtPosition(new(position.x, position.y - 2, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x - 1, position.y - 2, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y - 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y - 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y - 2, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y - 2, position.z))?.Live();
     }
 
     static void CreateUpTetrisBlock(Vector3Int position)
     {
-        CellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
     }
 
     static void CreateBeehive(Vector3Int position)
     {
-        CellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        CellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
+        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
     }
 }

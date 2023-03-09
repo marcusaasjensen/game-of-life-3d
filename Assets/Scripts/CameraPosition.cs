@@ -2,17 +2,19 @@ using UnityEngine;
 
 public class CameraPosition : MonoBehaviour
 {
-    [SerializeField] CellManager cellManager;
+    [SerializeField] GridCellManager cellManager;
     [SerializeField] float step = 1;
     [SerializeField] float projectionSizeOffset = 3;
 
     Vector3 _initialPosition;
     Camera _cam;
+    Transform _transform;
 
     void Start()
     {
         _initialPosition = transform.position;
         _cam = Camera.main;
+        _transform = transform;
     }
     void Update()
     {
@@ -22,17 +24,12 @@ public class CameraPosition : MonoBehaviour
 
     void SetLocalPositionWithOffset()
     {
-        if (!cellManager) return;
-        transform.position = new(
-        _initialPosition.x + step * cellManager.GridSize.x / 2,
-        _initialPosition.y + step * cellManager.GridSize.y / 2,
-        _initialPosition.z + step * cellManager.GridSize.z / 2
+        _transform.position = new(
+        _initialPosition.x + step * (GridCellManager.s_gridSize.x - 1) / 2,
+        _initialPosition.y + step * (GridCellManager.s_gridSize.y - 1) / 2,
+        _initialPosition.z + step * (GridCellManager.s_gridSize.z - 1) / 2
         );
     }
 
-    void SetSizeProjection()
-    {
-        if (!cellManager || !_cam) return;
-        _cam.orthographicSize = Vector3.Magnitude(cellManager.GridSize) / 2 + projectionSizeOffset;
-    }
+    void SetSizeProjection() => _cam.orthographicSize = Vector3.Magnitude(GridCellManager.s_gridSize) / 2 + projectionSizeOffset;
 }

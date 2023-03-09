@@ -4,8 +4,8 @@ using UnityEngine.Events;
 public class Cell : MonoBehaviour
 {
     [SerializeField] bool isAlive = false;
-    [SerializeField] Material deadCellMaterial;
-    [SerializeField] Material aliveCellMaterial;
+    [SerializeField] Material deadCellMaterial = default;
+    [SerializeField] Material aliveCellMaterial = default;
 
     MeshRenderer _currentMesh;
     Vector3Int _position;
@@ -15,22 +15,19 @@ public class Cell : MonoBehaviour
     void Awake()
     {
         _position = Vector3Int.FloorToInt(transform.position);
-        _currentMesh = _currentMesh ? _currentMesh : GetComponent<MeshRenderer>();
-
+        _currentMesh = GetComponent<MeshRenderer>();
         Die();
     }
 
     public void Die()
     {
         isAlive = false;
-        if (!deadCellMaterial) return;
         _currentMesh.material = deadCellMaterial;
     }
 
     public void Live()
     {
         isAlive = true;
-        if (!aliveCellMaterial) return;
         _currentMesh.material = aliveCellMaterial;
     }
 

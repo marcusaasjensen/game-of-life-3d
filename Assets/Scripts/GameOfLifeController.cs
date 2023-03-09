@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
 {
-    [SerializeField] CellManager cellManager;
+    [SerializeField] GridCellManager cellManager;
 
     [Header("Simulation")]
     [SerializeField] bool playOnStart = true;
@@ -23,11 +24,17 @@ public class GameOfLifeController : MonoBehaviour
     bool _isGameRunning = false;
     IEnumerator _currentGameCoroutine;
 
-    public CellManager CellManager { get { return cellManager; } }
+    public GridCellManager CellManager { get { return cellManager; } }
     public Vector3Int InitialPatternPosition { get { return patternPosition; } }
 
-    void Awake() => cellManager = cellManager ? cellManager : GetComponent<CellManager>();
-    void Start() { if (playOnStart) StartGameOfLife(); }
+    void Start()
+    { 
+        if (playOnStart)
+        {
+            InstantiateInitialAliveCellsPattern();
+            StartGameOfLife();
+        } 
+    }
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
     void InstantiateInitialAliveCellsPattern()
@@ -40,23 +47,23 @@ public class GameOfLifeController : MonoBehaviour
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
     {
-        foreach (CellStateController cell in CellManager.CellList)
+        foreach (CellStateController cell in GridCellManager.s_cellGrid)
             cell.SetCellStateOnNextGeneration(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
         ActualizeAllCellState();
     }
 
     void SkipGeneration()
     {
-        foreach (CellStateController cell in CellManager.CellList)
+        foreach (CellStateController cell in GridCellManager.s_cellGrid)
             cell.DontChangeOnNextGeneration();
         ActualizeAllCellState();
     }
 
     void ActualizeAllCellState()
     {
-        foreach (CellStateController cell in CellManager.CellList)
+        foreach (CellStateController cell in GridCellManager.s_cellGrid)
         {
-            cell.ChangeToNewState();
+            cell.UpdateState();
             cellManager.SortCellGameObject(cell.CurrentCell);
         }
     }
@@ -64,31 +71,26 @@ public class GameOfLifeController : MonoBehaviour
     [ContextMenu("Game Of Life/Start Game Of Life")]
     void StartGameOfLife()
     {
-        InstantiateInitialAliveCellsPattern();
+        StopGameOfLifeCoroutine();
         StartGameOfLifeCoroutine();
     }
 
     [ContextMenu("Game Of Life/Reset Game of Life")]
     void ResetGameOfLife()
     {
-        foreach (CellStateController cell in CellManager.CellList)
+        foreach (CellStateController cell in GridCellManager.s_cellGrid)
             cell.CurrentCell.Die();
+        MoveOnToNextGeneration();
     }
-
-    [ContextMenu("Game Of Life/Continue Game Of Life")]
-    void ContinueGameOfLife() => StartGameOfLifeCoroutine();
 
     void StartGameOfLifeCoroutine()
     {
-        if (_currentGameCoroutine != null)
-            StopCoroutine(_currentGameCoroutine);
-
         _currentGameCoroutine = GameOfLifeCoroutine();
         StartCoroutine(GameOfLifeCoroutine());
     }
 
-    [ContextMenu("Game Of Life/Stop Game Of Life")]
-    void StopGameOfLife()
+    [ContextMenu("Game Of Life/Pause Game Of Life")]
+    void StopGameOfLifeCoroutine()
     {
         _isGameRunning = false;
         if (_currentGameCoroutine != null)

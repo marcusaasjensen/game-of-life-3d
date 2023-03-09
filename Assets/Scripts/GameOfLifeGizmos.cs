@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
+[RequireComponent(typeof(GameOfLifeController))]
 public class GameOfLifeGizmos : MonoBehaviour
 {
     [SerializeField] GameOfLifeController gameOfLife;
-    [SerializeField] Color color = new Color(0, 255, 255, 50);
+    [SerializeField] Color color = new(0, 255, 255, 50);
+    const float CubeSizeOffset = .5f;
+
+    void OnDrawGizmos() => gameOfLife = gameOfLife ? gameOfLife : GetComponent<GameOfLifeController>();
     void OnDrawGizmosSelected()
     {
         if (!gameOfLife) return;
@@ -16,15 +17,14 @@ public class GameOfLifeGizmos : MonoBehaviour
 
     void ShowAliveCellsPatternPosition()
     {
-        Gizmos.color = gameOfLife.CellManager.IsPositionOutsideGrid(gameOfLife.InitialPatternPosition)? Color.red : color;
+        Gizmos.color = gameOfLife.CellManager.IsInsideGrid(gameOfLife.InitialPatternPosition) ? color : Color.red;
         Gizmos.DrawCube(gameOfLife.InitialPatternPosition, new Vector3Int(1, 1, 1));
     }
 
     void ShowGrid()
     {
         Gizmos.color = color;
-        CellManager cm = gameOfLife.CellManager;
-        if (!cm) return;
-        Gizmos.DrawWireCube(new Vector3(cm.GridSize.x / 2 - .5f, cm.GridSize.y / 2 - .5f, cm.GridSize.z / 2 - .5f), cm.GridSize);
+        GridCellManager cm = gameOfLife.CellManager;
+        Gizmos.DrawWireCube(new Vector3(cm.GridSizeProperty.x / 2 - CubeSizeOffset, cm.GridSizeProperty.y / 2 - CubeSizeOffset, cm.GridSizeProperty.z / 2 - CubeSizeOffset), cm.GridSizeProperty);
     }
 }
