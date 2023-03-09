@@ -475,9 +475,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellManager: {fileID: 1744172854}
   playOnStart: 1
-  timeBetweenEachIteration: 0.2
+  timeBetweenEachIteration: 0.1
   aliveCellsPattern: 0
-  patternPosition: {x: 10, y: 10, z: 10}
+  patternPosition: {x: 5, y: 5, z: 5}
   minAmountOfAliveNeighbours: 5
   maxAmountOfAliveNeighbours: 6
   amountOfAliveNeighboursToLive: 4
@@ -508,7 +508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b15e1db886d36b4f81538d43bd4ac42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 20, y: 20, z: 20}
+  gridSize: {x: 10, y: 10, z: 10}
   cellPrefab: {fileID: 12393739875170597, guid: 6a6bff6e5d81d734fb8bd7d7e9a63d90, type: 3}
   deadCellsParent: {fileID: 229545842}
   aliveCellsParent: {fileID: 390971348}

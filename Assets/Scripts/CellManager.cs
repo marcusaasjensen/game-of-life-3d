@@ -1,15 +1,17 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CellManager : MonoBehaviour
 {
-    [SerializeField, Min(0)] Vector3Int gridSize = new(4, 4, 4);
+    [SerializeField, Min(0)] Vector3Int gridSize = new(30, 30, 30);
     [SerializeField] Transform cellPrefab;
     [SerializeField] Transform deadCellsParent;
     [SerializeField] Transform aliveCellsParent;
-    [SerializeField] static CellStateController [] cellList;
 
+    static CellStateController [,,] s_cellGrid;
+    static Vector3Int s_gridSize;
     public Vector3Int GridSize { get { return gridSize; } }
-    public static CellStateController[] CellList { get { return cellList; } } 
+    public static CellStateController[,,] CellList { get { return s_cellGrid; } } 
 
     void Awake()
     {
@@ -19,52 +21,25 @@ public class CellManager : MonoBehaviour
 
     void InstantiateAllCells()
     {
-        cellList = new CellStateController[gridSize.x * gridSize.y * gridSize.z];
+        s_gridSize = gridSize;
+        s_cellGrid = new CellStateController[s_gridSize.x, s_gridSize.y, s_gridSize.z];
 
-        int index = 0;
-
-        for (int i = 0; i < gridSize.x; i++)
-            for (int j = 0; j < gridSize.y; j++)
-                for (int k = 0; k < gridSize.z; k++)
+        for (int i = 0; i < s_gridSize.x; i++)
+            for (int j = 0; j < s_gridSize.y; j++)
+                for (int k = 0; k < s_gridSize.z; k++)
                 {
                     Transform cell = Instantiate(cellPrefab, new Vector3Int(i, j, k), Quaternion.identity);
                     cell.SetParent(deadCellsParent);
-                    cellList[index] = cell.GetComponent<CellStateController>();
-                    index++;
+                    s_cellGrid[i,j,k] = cell.GetComponent<CellStateController>();
                 }
     }
 
-    public static Cell GetCellAtPosition(Vector3Int position)
-    {
-        foreach(CellStateController cell in cellList)
-        {
-            if (cell.CurrentCell.Position == position)
-                return cell.CurrentCell;
-        }
-        return null;
-    }
+    public static Cell GetCellAtPosition(Vector3Int position) => s_cellGrid[Mathf.Clamp(position.x, 0, s_gridSize.x - 1), Mathf.Clamp(position.y, 0, s_gridSize.y - 1), Mathf.Clamp(position.z, 0, s_gridSize.z - 1)].CurrentCell;
 
     void SetCellNeighbours()
     {
-        foreach (CellStateController cell in cellList)
-        {
-            Vector3Int currentCellPosition = cell.CurrentCell.Position;
-
-            foreach (CellStateController otherCell in cellList)
-            {
-                Vector3Int otherCellPosition = otherCell.CurrentCell.Position;
-
-                if (otherCellPosition == currentCellPosition) continue;
-
-                bool isNeighbourOnX = otherCellPosition.x == currentCellPosition.x + 1 || otherCellPosition.x == currentCellPosition.x - 1 || otherCellPosition.x == currentCellPosition.x;
-                bool isNeighbourOnY = otherCellPosition.y == currentCellPosition.y + 1 || otherCellPosition.y == currentCellPosition.y - 1 || otherCellPosition.y == currentCellPosition.y;
-                bool isNeighbourOnZ = otherCellPosition.z == currentCellPosition.z + 1 || otherCellPosition.z == currentCellPosition.z - 1 || otherCellPosition.z == currentCellPosition.z;
-
-                if (!(isNeighbourOnX && isNeighbourOnY && isNeighbourOnZ)) continue;
-
-                cell.AddCellNeighbour(otherCell.CurrentCell);
-            }
-        }
+        foreach (CellStateController cell in s_cellGrid)
+            cell.AddAllCellNeighbours(s_cellGrid, gridSize);
     }
 
     public void SortCellGameObject(Cell cell) => cell.transform.SetParent(cell.IsAlive ? aliveCellsParent : deadCellsParent);
