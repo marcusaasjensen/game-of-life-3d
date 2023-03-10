@@ -1,64 +1,83 @@
 using UnityEngine;
 public class AliveCellsPatternLibrary
 {
-    public delegate void CreatePattern(Vector3Int position);
+    delegate Vector3Int[] PatternCoordinates(Vector3Int position);
     public enum AliveCellsPatternName { Block3D, Tub, Tube, UpTetrisBlock }
 
-    static readonly CreatePattern[] createPatternFunctions = { CreateBlock3D, CreateTub, CreateTube, CreateUpTetrisBlock };
-    public static void CreateNewPattern(AliveCellsPatternName name, Vector3Int position) => createPatternFunctions[(int)name](position);
+    static readonly PatternCoordinates[] PatternCoordinatesList = { BlockCoordinates, TubCoordinates, TubeCoordinates, UpTetrisBlockCoordinates };
+    public static void SetAliveCellsPattern(AliveCellsPatternName name, Vector3Int position) 
+    { 
+        Vector3Int[] patternCoordinates = GetPatternCoordinatesAtPosition(name, position);
 
-    static void CreateBlock3D(Vector3Int position)
-    {
-        GridCellManager.GetCellAtPosition(position)?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z + 1))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z + 1))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z + 1))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z + 1))?.Live();
+        foreach (Vector3Int coordinate in patternCoordinates)
+        { 
+            Cell cell = GridCellManager.GetCellAtPosition(coordinate);
+            if(cell) cell.Live();
+        }
     }
 
-    static void CreateTub(Vector3Int position)
+    static Vector3Int[] GetPatternCoordinatesAtPosition(AliveCellsPatternName name, Vector3Int position) => PatternCoordinatesList[(int)name](position);
+
+    static Vector3Int[] TubCoordinates(Vector3Int position)
     {
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x, position.y + 1, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x, position.y - 1, position.z))?.Live();
+        Vector3Int[] cellCoordinates = new Vector3Int[4];
+
+        cellCoordinates[0] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[1] = new(position.x - 1, position.y, position.z);
+        cellCoordinates[2] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[3] = new(position.x, position.y - 1, position.z);
+
+        return cellCoordinates;
     }
 
-    static void CreateTube(Vector3Int position)
+    static Vector3Int [] BlockCoordinates(Vector3Int position)
     {
-        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y - 1, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y + 1, position.z))?.Live();
+        Vector3Int [] cellCoordinates = new Vector3Int[8];
 
-        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y - 1, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x - 2, position.y + 1, position.z))?.Live();
+        cellCoordinates[0] = new(position.x, position.y, position.z);
+        cellCoordinates[1] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[2] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[3] = new(position.x + 1, position.y + 1, position.z);
+        cellCoordinates[4] = new(position.x, position.y, position.z + 1);
+        cellCoordinates[5] = new(position.x + 1, position.y, position.z + 1);
+        cellCoordinates[6] = new(position.x, position.y + 1, position.z + 1);
+        cellCoordinates[7] = new(position.x + 1, position.y + 1, position.z + 1);
 
-        GridCellManager.GetCellAtPosition(new(position.x, position.y + 2, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y + 2, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 2, position.z))?.Live();
-
-        GridCellManager.GetCellAtPosition(new(position.x, position.y - 2, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x - 1, position.y - 2, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y - 2, position.z))?.Live();
+        return cellCoordinates;
     }
 
-    static void CreateUpTetrisBlock(Vector3Int position)
+    static Vector3Int [] TubeCoordinates(Vector3Int position) 
     {
-        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
+        Vector3Int[] cellCoordinates = new Vector3Int[12];
+        
+        cellCoordinates[0] = new(position.x + 2, position.y, position.z);
+        cellCoordinates[1] = new(position.x + 2, position.y - 1, position.z);
+        cellCoordinates[2] = new(position.x + 2, position.y + 1, position.z);
+
+        cellCoordinates[3] = new(position.x - 2, position.y, position.z);
+        cellCoordinates[4] = new(position.x - 2, position.y - 1, position.z);
+        cellCoordinates[5] = new(position.x - 2, position.y + 1, position.z);
+
+        cellCoordinates[6] = new(position.x, position.y + 2, position.z);
+        cellCoordinates[7] = new(position.x - 1, position.y + 2, position.z);
+        cellCoordinates[8] = new(position.x + 1, position.y + 2, position.z);
+
+        cellCoordinates[9] = new(position.x, position.y - 2, position.z);
+        cellCoordinates[10] = new(position.x - 1, position.y - 2, position.z);
+        cellCoordinates[11] = new(position.x + 1, position.y - 2, position.z);
+
+        return cellCoordinates;
     }
 
-    static void CreateBeehive(Vector3Int position)
+    static Vector3Int[] UpTetrisBlockCoordinates(Vector3Int position)
     {
-        GridCellManager.GetCellAtPosition(new(position.x, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 2, position.y, position.z))?.Live();
-        GridCellManager.GetCellAtPosition(new(position.x + 1, position.y + 1, position.z))?.Live();
+        Vector3Int[] cellCoordinates = new Vector3Int[4];
+
+        cellCoordinates[0] = new(position.x, position.y, position.z);
+        cellCoordinates[1] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[2] = new(position.x + 2, position.y, position.z);
+        cellCoordinates[3] = new(position.x + 1, position.y + 1, position.z);
+
+        return cellCoordinates;
     }
 }

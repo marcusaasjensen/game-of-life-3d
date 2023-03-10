@@ -42,7 +42,7 @@ public class GameOfLifeController : MonoBehaviour
         SetInitialAliveCells(aliveCellsPattern, patternPosition);
         SkipGeneration();
     }
-    public void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.CreateNewPattern(aliveCellsPattern, initialPosition);
+    public void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.SetAliveCellsPattern(aliveCellsPattern, initialPosition);
 
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
