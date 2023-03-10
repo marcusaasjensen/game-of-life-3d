@@ -10,14 +10,19 @@ public class GameOfLifeGizmos : MonoBehaviour
     void OnDrawGizmos() => gameOfLife = gameOfLife ? gameOfLife : GetComponent<GameOfLifeController>();
     void OnDrawGizmosSelected()
     {
-        ShowAliveCellsPatternPosition();
+        ShowPattern();
         ShowGrid();
     }
 
-    void ShowAliveCellsPatternPosition()
+    void ShowPattern()
     {
-        Gizmos.color = gameOfLife.GridCellManager.IsInsideGrid(gameOfLife.InitialPatternPosition) ? color : Color.red;
-        Gizmos.DrawCube(gameOfLife.InitialPatternPosition, new Vector3Int(1, 1, 1));
+        Vector3Int [] coordinates = AliveCellsPatternLibrary.GetPatternCoordinatesAtPosition(gameOfLife.AliveCellsPattern, gameOfLife.InitialPatternPosition);
+        
+        foreach (Vector3Int coordinate in coordinates)
+        {
+            Gizmos.color = gameOfLife.GridCellManager.IsInsideGrid(coordinate) ? color : Color.red;
+            Gizmos.DrawCube(coordinate, new Vector3Int(1, 1, 1));
+        }
     }
 
     void ShowGrid()

@@ -26,14 +26,15 @@ public class GameOfLifeController : MonoBehaviour
 
     public GridCellManager GridCellManager { get { return gridCellManager; } }
     public Vector3Int InitialPatternPosition { get { return patternPosition; } }
+    public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern { get { return aliveCellsPattern; } }
 
-    void Start()
-    { 
-        if (playOnStart)
-        {
-            InstantiateInitialAliveCellsPattern();
-            StartGameOfLife();
-        } 
+    void Start() => OnPlayOnStart();
+
+    void OnPlayOnStart()
+    {
+        if (!playOnStart) return;
+        InstantiateInitialAliveCellsPattern();
+        StartGameOfLife();
     }
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
