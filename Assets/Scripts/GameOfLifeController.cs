@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
 {
-    [SerializeField] GridCellManager cellManager;
+    [SerializeField] GridCellManager gridCellManager;
 
     [Header("Simulation")]
     [SerializeField] bool playOnStart = true;
@@ -24,7 +24,7 @@ public class GameOfLifeController : MonoBehaviour
     bool _isGameRunning = false;
     IEnumerator _currentGameCoroutine;
 
-    public GridCellManager CellManager { get { return cellManager; } }
+    public GridCellManager GridCellManager { get { return gridCellManager; } }
     public Vector3Int InitialPatternPosition { get { return patternPosition; } }
 
     void Start()
@@ -64,7 +64,7 @@ public class GameOfLifeController : MonoBehaviour
         foreach (CellStateController cell in GridCellManager.s_cellGrid)
         {
             cell.UpdateState();
-            cellManager.SortCellGameObject(cell.CurrentCell);
+            gridCellManager.SortCellGameObject(cell.CurrentCell);
         }
     }
 

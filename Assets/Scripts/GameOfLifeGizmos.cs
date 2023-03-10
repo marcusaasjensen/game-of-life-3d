@@ -10,21 +10,20 @@ public class GameOfLifeGizmos : MonoBehaviour
     void OnDrawGizmos() => gameOfLife = gameOfLife ? gameOfLife : GetComponent<GameOfLifeController>();
     void OnDrawGizmosSelected()
     {
-        if (!gameOfLife) return;
         ShowAliveCellsPatternPosition();
         ShowGrid();
     }
 
     void ShowAliveCellsPatternPosition()
     {
-        Gizmos.color = gameOfLife.CellManager.IsInsideGrid(gameOfLife.InitialPatternPosition) ? color : Color.red;
+        Gizmos.color = gameOfLife.GridCellManager.IsInsideGrid(gameOfLife.InitialPatternPosition) ? color : Color.red;
         Gizmos.DrawCube(gameOfLife.InitialPatternPosition, new Vector3Int(1, 1, 1));
     }
 
     void ShowGrid()
     {
         Gizmos.color = color;
-        GridCellManager cm = gameOfLife.CellManager;
+        GridCellManager cm = gameOfLife.GridCellManager;
         Gizmos.DrawWireCube(new Vector3(cm.GridSizeProperty.x / 2 - CubeSizeOffset, cm.GridSizeProperty.y / 2 - CubeSizeOffset, cm.GridSizeProperty.z / 2 - CubeSizeOffset), cm.GridSizeProperty);
     }
 }
