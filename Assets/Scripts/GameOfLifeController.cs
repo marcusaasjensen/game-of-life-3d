@@ -1,42 +1,41 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
 {
-    public enum GameOfLifeRule { TwoDimension, ThreeDimension, Custom };
+    private enum GameOfLifeRule { TwoDimension, ThreeDimension, Custom };
 
-    [SerializeField] GridCellManager gridCellManager;
+    [SerializeField] private GridCellManager gridCellManager;
 
     [Header("Simulation")]
-    [SerializeField] bool playOnStart = true;
-    [SerializeField] float timeBetweenEachIteration;
+    [SerializeField] private bool playOnStart = true;
+    [SerializeField] private float timeBetweenEachIteration;
 
     [Header("Pattern Editing")]
-    [SerializeField] AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern = default;
-    [SerializeField] Vector3Int patternPosition = Vector3Int.zero;
+    [SerializeField] private AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern;
+    [SerializeField] private Vector3Int patternPosition = Vector3Int.zero;
 
     [Header("Rules")]
-    [SerializeField] GameOfLifeRule rule = default;
+    [SerializeField] private GameOfLifeRule rule;
     [Header("Custom Rules")]
-    [SerializeField] int minAmountOfAliveNeighbours = 5;
-    [SerializeField] int maxAmountOfAliveNeighbours = 6;
-    [SerializeField] int amountOfAliveNeighboursToLive = 4;
+    [SerializeField] private int minAmountOfAliveNeighbours = 5;
+    [SerializeField] private int maxAmountOfAliveNeighbours = 6;
+    [SerializeField] private int amountOfAliveNeighboursToLive = 4;
 
     //These default numbers are the 3D equivalent of the rules in 2D.
 
-    static int s_numberOfGenerations = 0;
-    
-    bool _allCellsDead = false;
-    bool _isGameRunning = false;
-    IEnumerator _currentGameCoroutine;
+    private bool _allCellsDead;
+    private bool _isGameRunning;
+    private IEnumerator _currentGameCoroutine;
 
-    public static int NumberOfGenerations { get { return s_numberOfGenerations; } }
-    public GridCellManager GridCellManager { get { return gridCellManager; } }
-    public Vector3Int InitialPatternPosition { get { return patternPosition; } }
-    public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern { get { return aliveCellsPattern; } }
+    public static int NumberOfGenerations { get; private set; }
+    public GridCellManager GridCellManager => gridCellManager;
+    public Vector3Int InitialPatternPosition => patternPosition;
+    public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern => aliveCellsPattern;
 
-    void Awake()
+    private void Awake()
     {
         switch(rule)
         {
@@ -50,14 +49,16 @@ public class GameOfLifeController : MonoBehaviour
                 maxAmountOfAliveNeighbours = 6;
                 amountOfAliveNeighboursToLive = 4;
                 break;
-            default:
+            case GameOfLifeRule.Custom:
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
-    void Start() => OnPlayOnStart();
+    private void Start() => OnPlayOnStart();
 
-    void OnPlayOnStart()
+    private void OnPlayOnStart()
     {
         if (!playOnStart) return;
         InstantiateInitialAliveCellsPattern();
@@ -65,33 +66,33 @@ public class GameOfLifeController : MonoBehaviour
     }
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
-    void InstantiateInitialAliveCellsPattern()
+    private void InstantiateInitialAliveCellsPattern()
     {
         SetInitialAliveCells(aliveCellsPattern, patternPosition);
         SkipGeneration();
     }
-    public void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.SetAliveCellsPattern(aliveCellsPattern, initialPosition);
+    private static void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.SetAliveCellsPattern(aliveCellsPattern, initialPosition);
 
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
     {
-        foreach (CellStateController cell in GridCellManager.s_cellGrid)
+        foreach (var cell in GridCellManager.CellGrid)
             cell.SetCellStateOnNextGenerationWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
         ActualizeAllCellState();
     }
 
-    void SkipGeneration()
+    private void SkipGeneration()
     {
-        foreach (CellStateController cell in GridCellManager.s_cellGrid)
+        foreach (var cell in GridCellManager.CellGrid)
             cell.DontChangeOnNextGeneration();
         ActualizeAllCellState();
     }
 
-    void ActualizeAllCellState()
+    private void ActualizeAllCellState()
     {
         _allCellsDead = true;
 
-        foreach (CellStateController cell in GridCellManager.s_cellGrid)
+        foreach (var cell in GridCellManager.CellGrid)
         {
             cell.UpdateState();
             gridCellManager.SortCellGameObject(cell.CurrentCell);
@@ -101,40 +102,40 @@ public class GameOfLifeController : MonoBehaviour
         }
 
         if(!_allCellsDead)
-            s_numberOfGenerations++;
+            NumberOfGenerations++;
     }
 
     [ContextMenu("Game Of Life/Start Game Of Life")]
-    void StartGameOfLife()
+    private void StartGameOfLife()
     {
         StopGameOfLifeCoroutine();
         StartGameOfLifeCoroutine();
     }
 
     [ContextMenu("Game Of Life/Reset Game of Life")]
-    void ResetGameOfLife()
+    private void ResetGameOfLife()
     {
-        foreach (CellStateController cell in GridCellManager.s_cellGrid)
+        foreach (var cell in GridCellManager.CellGrid)
             cell.CurrentCell.Die();
         MoveOnToNextGeneration();
-        s_numberOfGenerations = 0;
+        NumberOfGenerations = 0;
     }
 
-    void StartGameOfLifeCoroutine()
+    private void StartGameOfLifeCoroutine()
     {
         _currentGameCoroutine = GameOfLifeCoroutine();
         StartCoroutine(GameOfLifeCoroutine());
     }
 
     [ContextMenu("Game Of Life/Pause Game Of Life")]
-    void StopGameOfLifeCoroutine()
+    private void StopGameOfLifeCoroutine()
     {
         _isGameRunning = false;
         if (_currentGameCoroutine != null)
             StopCoroutine(_currentGameCoroutine);
     }
 
-    IEnumerator GameOfLifeCoroutine()
+    private IEnumerator GameOfLifeCoroutine()
     {
         _isGameRunning = true;
         while (_isGameRunning)

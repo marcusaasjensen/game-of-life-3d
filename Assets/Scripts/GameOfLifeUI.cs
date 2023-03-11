@@ -1,9 +1,10 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class GameOfLifeUI : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI numberOfgenerationsText;
+    [SerializeField] private TextMeshProUGUI numberOfGenerationsText;
 
-    void Update() => numberOfgenerationsText.text = "Number of generations: " + GameOfLifeController.NumberOfGenerations;
+    private void Update() => numberOfGenerationsText.text = "Number of generations: " + GameOfLifeController.NumberOfGenerations;
 }

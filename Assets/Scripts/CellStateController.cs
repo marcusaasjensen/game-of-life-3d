@@ -4,32 +4,33 @@ using UnityEngine;
 
 public class CellStateController : MonoBehaviour
 {
-    [SerializeField] Cell currentCell;
-    [SerializeField] HashSet<Cell> surroundingNeighbours = new();
-    [SerializeField] bool isCellAliveOnNextGeneration = false;
-    public Cell CurrentCell { get { return currentCell; } }
+    [SerializeField] private Cell currentCell;
+    [SerializeField] private bool isCellAliveOnNextGeneration;
+    
+    private readonly HashSet<Cell> _surroundingNeighbours = new();
+    public Cell CurrentCell => currentCell;
 
     public void AddAllCellNeighbours(CellStateController[,,] cellList, Vector3Int gridSize)
     {
-        Vector3Int cell = currentCell.Position;
+        var cell = currentCell.Position;
 
-        int minX = Mathf.Max(cell.x - 1, 0);
-        int minY = Mathf.Max(cell.y - 1, 0);
-        int minZ = Mathf.Max(cell.z - 1, 0);
+        var minX = Mathf.Max(cell.x - 1, 0);
+        var minY = Mathf.Max(cell.y - 1, 0);
+        var minZ = Mathf.Max(cell.z - 1, 0);
 
-        int maxX = Mathf.Min(cell.x + 1, gridSize.x - 1);
-        int maxY = Mathf.Min(cell.y + 1, gridSize.y - 1);
-        int maxZ = Mathf.Min(cell.z + 1, gridSize.z - 1);
+        var maxX = Mathf.Min(cell.x + 1, gridSize.x - 1);
+        var maxY = Mathf.Min(cell.y + 1, gridSize.y - 1);
+        var maxZ = Mathf.Min(cell.z + 1, gridSize.z - 1);
 
-        for (int i = minX; i <= maxX; i++) for (int j = minY; j <= maxY; j++) for (int k = minZ; k <= maxZ; k++)
-                    surroundingNeighbours.Add(cellList[i, j, k].CurrentCell);
+        for (var i = minX; i <= maxX; i++) for (var j = minY; j <= maxY; j++) for (var k = minZ; k <= maxZ; k++)
+                    _surroundingNeighbours.Add(cellList[i, j, k].CurrentCell);
 
-        surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
+        _surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
     }
 
     public void SetCellStateOnNextGenerationWithRules(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
     {
-        int nbOfLivingNeighbours = surroundingNeighbours.Count(cell => cell.IsAlive);
+        var nbOfLivingNeighbours = _surroundingNeighbours.Count(cell => cell.IsAlive);
 
         if (nbOfLivingNeighbours == amountOfAliveNeighboursToLive && !currentCell.IsAlive)
         {
@@ -37,8 +38,8 @@ public class CellStateController : MonoBehaviour
             return;
         }
 
-        bool isUnderpopulated = nbOfLivingNeighbours < minAmountOfAliveNeighbours;
-        bool isOverpopulated = nbOfLivingNeighbours > maxAmountOfAliveNeighbours;
+        var isUnderpopulated = nbOfLivingNeighbours < minAmountOfAliveNeighbours;
+        var isOverpopulated = nbOfLivingNeighbours > maxAmountOfAliveNeighbours;
 
         if (isUnderpopulated || isOverpopulated)
         {

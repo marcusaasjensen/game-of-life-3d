@@ -208,10 +208,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 44.75
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
@@ -434,7 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da12e061958beb541a2927cb489f0c7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfgenerationsText: {fileID: 34483795}
+  numberOfGenerationsText: {fileID: 34483795}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,7 +761,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b15e1db886d36b4f81538d43bd4ac42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSize: {x: 20, y: 20, z: 20}
+  gridSizeProperty: {x: 20, y: 20, z: 20}
   cellPrefab: {fileID: 12393739875170597, guid: 6a6bff6e5d81d734fb8bd7d7e9a63d90, type: 3}
   deadCellsParent: {fileID: 229545842}
   aliveCellsParent: {fileID: 390971348}

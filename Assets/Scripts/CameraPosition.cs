@@ -2,32 +2,32 @@ using UnityEngine;
 
 public class CameraPosition : MonoBehaviour
 {
-    [SerializeField] float projectionSizeOffset = 3;
-    [SerializeField] Vector3Int defaultCameraRotation = new(45, 45, 0);
-    [SerializeField] float timeToRotate = .5f;
-    [SerializeField] float timeToFixRotation = .1f;
-    [SerializeField] float rotationStep = 90f;
+    [SerializeField] private float projectionSizeOffset = 3;
+    [SerializeField] private Vector3Int defaultCameraRotation = new(45, 45, 0);
+    [SerializeField] private float timeToRotate = .5f;
+    [SerializeField] private float timeToFixRotation = .1f;
+    [SerializeField] private float rotationStep = 90f;
 
-    Camera _cam;
-    Transform _transform;
+    private Camera _cam;
+    private Transform _transform;
 
-    Vector3 _initialPosition;
-    Vector3 _previousWorldMousePosition;
-    Vector3 _newWorldMousePosition;
+    private Vector3 _initialPosition;
+    private Vector3 _previousWorldMousePosition;
+    private Vector3 _newWorldMousePosition;
 
-    void Start()
+    private void Start()
     {
         SetInitialValues();
         SetPositionWithOffset();
         SetSizeProjection();
     }
-    void Update()
+    private void Update()
     {
         OnRightButton();
         OnLeftMouseButton();
     }
 
-    void SetInitialValues()
+    private void SetInitialValues()
     {
         _cam = Camera.main;
         _transform = transform;
@@ -35,13 +35,13 @@ public class CameraPosition : MonoBehaviour
         _transform.eulerAngles = defaultCameraRotation;
     }
 
-    void OnRightButton()
+    private void OnRightButton()
     {
         if (!Input.GetMouseButton(1)) return;
         FixCurrentRotationToStep(_newWorldMousePosition, rotationStep);
     }
 
-    void OnLeftMouseButton()
+    private void OnLeftMouseButton()
     {
         if (Input.GetMouseButton(1)) return;
 
@@ -51,41 +51,43 @@ public class CameraPosition : MonoBehaviour
         if (!Input.GetMouseButton(0)) return;
 
         _newWorldMousePosition = Vector3.Lerp(_previousWorldMousePosition, _cam.ScreenToViewportPoint(Input.mousePosition), timeToFixRotation);
-        Vector3 direction = _previousWorldMousePosition - _newWorldMousePosition;
+        var direction = _previousWorldMousePosition - _newWorldMousePosition;
         _previousWorldMousePosition = Vector3.Lerp(_previousWorldMousePosition, _newWorldMousePosition, timeToRotate);
 
         RotateCameraToDirection(direction);
     }
 
-    void RotateCameraToDirection(Vector3 direction)
+    private void RotateCameraToDirection(Vector3 direction)
     {
-        float rotationAroundXAxis = direction.y * 180;
-        float rotationAroundYAxis = -direction.x * 180;
+        var rotationAroundXAxis = direction.y * 180;
+        var rotationAroundYAxis = -direction.x * 180;
 
-        _transform.Rotate(new(1, 0, 0), rotationAroundXAxis);
-        _transform.Rotate(new(0, 1, 0), rotationAroundYAxis, Space.World);
+        _transform.Rotate(new Vector3(1, 0, 0), rotationAroundXAxis);
+        _transform.Rotate(new Vector3(0, 1, 0), rotationAroundYAxis, Space.World);
     }
 
-    void FixCurrentRotationToStep(Vector3 direction, float rotationStep)
+    private void FixCurrentRotationToStep(Vector3 direction, float step)
     {
-        rotationStep = rotationStep == 0 ? 1 : rotationStep;
+        step = step == 0 ? 1 : step;
 
-        Quaternion targetRotation = Quaternion.Euler(
-            rotationStep * Mathf.RoundToInt(1 / rotationStep * _transform.eulerAngles.x),
-            rotationStep * Mathf.RoundToInt(1 / rotationStep * _transform.eulerAngles.y), 
+        var eulerAngles = _transform.eulerAngles;
+        
+        var targetRotation = Quaternion.Euler(
+            step * Mathf.RoundToInt(1 / step * eulerAngles.x),
+            step * Mathf.RoundToInt(1 / step * eulerAngles.y), 
             0f
         );
 
         _transform.rotation = Quaternion.Lerp(_transform.rotation, targetRotation, timeToFixRotation);
     }
 
-    void SetPositionWithOffset()
+    private void SetPositionWithOffset()
     {
-        _transform.position = new(
-            _initialPosition.x + (GridCellManager.s_gridSize.x - 1) / 2,
-            _initialPosition.y + (GridCellManager.s_gridSize.y - 1) / 2,
-            _initialPosition.z + (GridCellManager.s_gridSize.z - 1) / 2
+        _transform.position = new Vector3(
+            _initialPosition.x + (GridCellManager.GridSize.x - 1) / 2f,
+            _initialPosition.y + (GridCellManager.GridSize.y - 1) / 2f,
+            _initialPosition.z + (GridCellManager.GridSize.z - 1) / 2f
         );
     }
-    void SetSizeProjection() => _cam.orthographicSize = Vector3.Magnitude(GridCellManager.s_gridSize / 2) + projectionSizeOffset;
+    private void SetSizeProjection() => _cam.orthographicSize = Vector3.Magnitude(GridCellManager.GridSize / 2) + projectionSizeOffset;
 }

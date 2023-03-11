@@ -2,18 +2,17 @@ using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    [SerializeField] bool isAlive = false;
-    [SerializeField] Material deadCellMaterial = default;
-    [SerializeField] Material aliveCellMaterial = default;
+    [SerializeField] private bool isAlive;
+    [SerializeField] private Material deadCellMaterial;
+    [SerializeField] private Material aliveCellMaterial;
 
-    MeshRenderer _currentMesh;
-    Vector3Int _position;
-    public bool IsAlive { get { return isAlive; } }
-    public Vector3Int Position { get { return _position; } }
+    private MeshRenderer _currentMesh;
+    public bool IsAlive => isAlive;
+    public Vector3Int Position { get; private set; }
 
-    void Awake()
+    private void Awake()
     {
-        _position = Vector3Int.FloorToInt(transform.position);
+        Position = Vector3Int.FloorToInt(transform.position);
         _currentMesh = GetComponent<MeshRenderer>();
         Die();
     }
