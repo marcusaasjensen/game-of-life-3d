@@ -4,6 +4,7 @@ public class CameraPosition : MonoBehaviour
 {
     [SerializeField] float projectionSizeOffset = 3;
     [SerializeField] Vector3Int defaultCameraRotation = new(45, 45, 0);
+    [SerializeField] float timeToRotate = .5f;
     [SerializeField] float timeToFixRotation = .1f;
     [SerializeField] float rotationStep = 90f;
 
@@ -42,14 +43,16 @@ public class CameraPosition : MonoBehaviour
 
     void OnLeftMouseButton()
     {
+        if (Input.GetMouseButton(1)) return;
+
         if (Input.GetMouseButtonDown(0))
             _previousWorldMousePosition = _cam.ScreenToViewportPoint(Input.mousePosition);
 
         if (!Input.GetMouseButton(0)) return;
 
-        _newWorldMousePosition = _cam.ScreenToViewportPoint(Input.mousePosition);
+        _newWorldMousePosition = Vector3.Lerp(_previousWorldMousePosition, _cam.ScreenToViewportPoint(Input.mousePosition), timeToFixRotation);
         Vector3 direction = _previousWorldMousePosition - _newWorldMousePosition;
-        _previousWorldMousePosition = _newWorldMousePosition;
+        _previousWorldMousePosition = Vector3.Lerp(_previousWorldMousePosition, _newWorldMousePosition, timeToRotate);
 
         RotateCameraToDirection(direction);
     }

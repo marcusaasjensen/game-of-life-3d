@@ -13,19 +13,23 @@ public class CellStateController : MonoBehaviour
     {
         Vector3Int cell = currentCell.Position;
 
-        for (int i = -1; i <= 1; i++) for (int j = -1; j <= 1; j++) for (int k = -1; k <= 1; k++)
-        {
-            Vector3Int neighbour = new(cell.x + i, cell.y + j, cell.z + k);
-            neighbour.Clamp(Vector3Int.zero, gridSize - Vector3Int.one);
-            surroundingNeighbours?.Add(cellList[neighbour.x, neighbour.y, neighbour.z].CurrentCell);
-        }
+        int minX = Mathf.Max(cell.x - 1, 0);
+        int minY = Mathf.Max(cell.y - 1, 0);
+        int minZ = Mathf.Max(cell.z - 1, 0);
 
-        surroundingNeighbours?.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
+        int maxX = Mathf.Min(cell.x + 1, gridSize.x - 1);
+        int maxY = Mathf.Min(cell.y + 1, gridSize.y - 1);
+        int maxZ = Mathf.Min(cell.z + 1, gridSize.z - 1);
+
+        for (int i = minX; i <= maxX; i++) for (int j = minY; j <= maxY; j++) for (int k = minZ; k <= maxZ; k++)
+                    surroundingNeighbours.Add(cellList[i, j, k].CurrentCell);
+
+        surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
     }
 
     public void SetCellStateOnNextGeneration(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
     {
-        int? nbOfLivingNeighbours = surroundingNeighbours?.Count(cell => cell.IsAlive);
+        int nbOfLivingNeighbours = surroundingNeighbours.Count(cell => cell.IsAlive);
 
         if (nbOfLivingNeighbours == amountOfAliveNeighboursToLive && !currentCell.IsAlive)
         {
