@@ -27,7 +27,7 @@ public class CellStateController : MonoBehaviour
         surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
     }
 
-    public void SetCellStateOnNextGeneration(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
+    public void SetCellStateOnNextGenerationWithRules(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
     {
         int nbOfLivingNeighbours = surroundingNeighbours.Count(cell => cell.IsAlive);
 

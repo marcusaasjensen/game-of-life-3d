@@ -25,9 +25,13 @@ public class GameOfLifeController : MonoBehaviour
 
     //These default numbers are the 3D equivalent of the rules in 2D.
 
+    static int s_numberOfGenerations = 0;
+    
+    bool _allCellsDead = false;
     bool _isGameRunning = false;
     IEnumerator _currentGameCoroutine;
 
+    public static int NumberOfGenerations { get { return s_numberOfGenerations; } }
     public GridCellManager GridCellManager { get { return gridCellManager; } }
     public Vector3Int InitialPatternPosition { get { return patternPosition; } }
     public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern { get { return aliveCellsPattern; } }
@@ -72,7 +76,7 @@ public class GameOfLifeController : MonoBehaviour
     public void MoveOnToNextGeneration()
     {
         foreach (CellStateController cell in GridCellManager.s_cellGrid)
-            cell.SetCellStateOnNextGeneration(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
+            cell.SetCellStateOnNextGenerationWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
         ActualizeAllCellState();
     }
 
@@ -85,11 +89,19 @@ public class GameOfLifeController : MonoBehaviour
 
     void ActualizeAllCellState()
     {
+        _allCellsDead = true;
+
         foreach (CellStateController cell in GridCellManager.s_cellGrid)
         {
             cell.UpdateState();
             gridCellManager.SortCellGameObject(cell.CurrentCell);
+            
+            if(cell.CurrentCell.IsAlive)
+                _allCellsDead = false;
         }
+
+        if(!_allCellsDead)
+            s_numberOfGenerations++;
     }
 
     [ContextMenu("Game Of Life/Start Game Of Life")]
@@ -105,6 +117,7 @@ public class GameOfLifeController : MonoBehaviour
         foreach (CellStateController cell in GridCellManager.s_cellGrid)
             cell.CurrentCell.Die();
         MoveOnToNextGeneration();
+        s_numberOfGenerations = 0;
     }
 
     void StartGameOfLifeCoroutine()
