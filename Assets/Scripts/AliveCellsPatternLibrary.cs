@@ -3,9 +3,9 @@ using UnityEngine;
 public class AliveCellsPatternLibrary
 {
     delegate Vector3Int[] PatternCoordinates(Vector3Int position);
-    public enum AliveCellsPatternName { Cell, Cube, Tub, Tube, Beehive, UpTetrisBlock }
+    public enum AliveCellsPatternName { Cell, Cube, Tub, Tube, Beehive, Boat, UpTetrisBlock }
 
-    static readonly PatternCoordinates[] PatternCoordinatesList = { CellCoordinates, CubeCoordinates, TubCoordinates, TubeCoordinates, BeehiveCoordinates, UpTetrisBlockCoordinates };
+    static readonly PatternCoordinates[] PatternCoordinatesList = { CellCoordinates, CubeCoordinates, TubCoordinates, TubeCoordinates, BeehiveCoordinates, BoatCoordinates, UpTetrisBlockCoordinates };
     public static void SetAliveCellsPattern(AliveCellsPatternName name, Vector3Int position) 
     { 
         Vector3Int[] patternCoordinates = GetPatternCoordinatesAtPosition(name, position);
@@ -30,10 +30,12 @@ public class AliveCellsPatternLibrary
     {
         Vector3Int[] cellCoordinates = new Vector3Int[4];
 
-        cellCoordinates[0] = new(position.x + 1, position.y, position.z);
-        cellCoordinates[1] = new(position.x - 1, position.y, position.z);
-        cellCoordinates[2] = new(position.x, position.y + 1, position.z);
-        cellCoordinates[3] = new(position.x, position.y - 1, position.z);
+        int i = 0;
+
+        cellCoordinates[i++] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x, position.y - 1, position.z);
 
         return cellCoordinates;
     }
@@ -42,14 +44,16 @@ public class AliveCellsPatternLibrary
     {
         Vector3Int [] cellCoordinates = new Vector3Int[8];
 
-        cellCoordinates[0] = new(position.x, position.y, position.z);
-        cellCoordinates[1] = new(position.x + 1, position.y, position.z);
-        cellCoordinates[2] = new(position.x, position.y + 1, position.z);
-        cellCoordinates[3] = new(position.x + 1, position.y + 1, position.z);
-        cellCoordinates[4] = new(position.x, position.y, position.z + 1);
-        cellCoordinates[5] = new(position.x + 1, position.y, position.z + 1);
-        cellCoordinates[6] = new(position.x, position.y + 1, position.z + 1);
-        cellCoordinates[7] = new(position.x + 1, position.y + 1, position.z + 1);
+        int i = 0;
+
+        cellCoordinates[i++] = new(position.x, position.y, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x, position.y, position.z + 1);
+        cellCoordinates[i++] = new(position.x + 1, position.y, position.z + 1);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z + 1);
+        cellCoordinates[i++] = new(position.x + 1, position.y + 1, position.z + 1);
 
         return cellCoordinates;
     }
@@ -57,22 +61,24 @@ public class AliveCellsPatternLibrary
     static Vector3Int [] TubeCoordinates(Vector3Int position) 
     {
         Vector3Int[] cellCoordinates = new Vector3Int[12];
-        
-        cellCoordinates[0] = new(position.x + 2, position.y, position.z);
-        cellCoordinates[1] = new(position.x + 2, position.y - 1, position.z);
-        cellCoordinates[2] = new(position.x + 2, position.y + 1, position.z);
 
-        cellCoordinates[3] = new(position.x - 2, position.y, position.z);
-        cellCoordinates[4] = new(position.x - 2, position.y - 1, position.z);
-        cellCoordinates[5] = new(position.x - 2, position.y + 1, position.z);
+        int i = 0;
 
-        cellCoordinates[6] = new(position.x, position.y + 2, position.z);
-        cellCoordinates[7] = new(position.x - 1, position.y + 2, position.z);
-        cellCoordinates[8] = new(position.x + 1, position.y + 2, position.z);
+        cellCoordinates[i++] = new(position.x + 2, position.y, position.z);
+        cellCoordinates[i++] = new(position.x + 2, position.y - 1, position.z);
+        cellCoordinates[i++] = new(position.x + 2, position.y + 1, position.z);
 
-        cellCoordinates[9] = new(position.x, position.y - 2, position.z);
-        cellCoordinates[10] = new(position.x - 1, position.y - 2, position.z);
-        cellCoordinates[11] = new(position.x + 1, position.y - 2, position.z);
+        cellCoordinates[i++] = new(position.x - 2, position.y, position.z);
+        cellCoordinates[i++] = new(position.x - 2, position.y - 1, position.z);
+        cellCoordinates[i++] = new(position.x - 2, position.y + 1, position.z);
+
+        cellCoordinates[i++] = new(position.x, position.y + 2, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y + 2, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y + 2, position.z);
+
+        cellCoordinates[i++] = new(position.x, position.y - 2, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y - 2, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y - 2, position.z);
 
         return cellCoordinates;
     }
@@ -81,12 +87,29 @@ public class AliveCellsPatternLibrary
     {
         Vector3Int[] cellCoordinates = new Vector3Int[6];
 
-        cellCoordinates[0] = new(position.x + 2, position.y, position.z);
-        cellCoordinates[1] = new(position.x - 1, position.y, position.z);
-        cellCoordinates[2] = new(position.x, position.y + 1, position.z);
-        cellCoordinates[3] = new(position.x, position.y - 1, position.z);
-        cellCoordinates[4] = new(position.x + 1, position.y + 1, position.z);
-        cellCoordinates[5] = new(position.x + 1, position.y - 1, position.z);
+        int i = 0;
+
+        cellCoordinates[i++] = new(position.x + 2, position.y, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x, position.y - 1, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y - 1, position.z);
+
+        return cellCoordinates;
+    }
+
+    static Vector3Int[] BoatCoordinates(Vector3Int position)
+    {
+        Vector3Int[] cellCoordinates = new Vector3Int[5];
+
+        int i = 0;
+
+        cellCoordinates[i++] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z);
+        cellCoordinates[i++] = new(position.x, position.y - 1, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y + 1, position.z);
 
         return cellCoordinates;
     }
@@ -95,11 +118,15 @@ public class AliveCellsPatternLibrary
     {
         Vector3Int[] cellCoordinates = new Vector3Int[4];
 
-        cellCoordinates[0] = new(position.x, position.y, position.z);
-        cellCoordinates[1] = new(position.x + 1, position.y, position.z);
-        cellCoordinates[2] = new(position.x + 2, position.y, position.z);
-        cellCoordinates[3] = new(position.x + 1, position.y + 1, position.z);
+        int i = 0;
+
+        cellCoordinates[i++] = new(position.x, position.y, position.z);
+        cellCoordinates[i++] = new(position.x + 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x - 1, position.y, position.z);
+        cellCoordinates[i++] = new(position.x, position.y + 1, position.z);
 
         return cellCoordinates;
     }
+
+
 }
