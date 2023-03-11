@@ -478,8 +478,9 @@ MonoBehaviour:
   gridCellManager: {fileID: 1744172854}
   playOnStart: 1
   timeBetweenEachIteration: 0.1
-  aliveCellsPattern: 7
+  aliveCellsPattern: 1
   patternPosition: {x: 9, y: 9, z: 9}
+  rule: 1
   minAmountOfAliveNeighbours: 5
   maxAmountOfAliveNeighbours: 6
   amountOfAliveNeighboursToLive: 4

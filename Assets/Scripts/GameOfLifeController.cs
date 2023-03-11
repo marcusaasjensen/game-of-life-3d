@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
 {
+    public enum GameOfLifeRule { TwoDimension, ThreeDimension, Custom };
+
     [SerializeField] GridCellManager gridCellManager;
 
     [Header("Simulation")]
@@ -13,8 +15,10 @@ public class GameOfLifeController : MonoBehaviour
     [Header("Pattern Editing")]
     [SerializeField] AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern = default;
     [SerializeField] Vector3Int patternPosition = Vector3Int.zero;
-    
+
     [Header("Rules")]
+    [SerializeField] GameOfLifeRule rule = default;
+    [Header("Custom Rules")]
     [SerializeField] int minAmountOfAliveNeighbours = 5;
     [SerializeField] int maxAmountOfAliveNeighbours = 6;
     [SerializeField] int amountOfAliveNeighboursToLive = 4;
@@ -27,6 +31,25 @@ public class GameOfLifeController : MonoBehaviour
     public GridCellManager GridCellManager { get { return gridCellManager; } }
     public Vector3Int InitialPatternPosition { get { return patternPosition; } }
     public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern { get { return aliveCellsPattern; } }
+
+    void Awake()
+    {
+        switch(rule)
+        {
+            case GameOfLifeRule.TwoDimension:
+                minAmountOfAliveNeighbours = 2;
+                maxAmountOfAliveNeighbours = 3;
+                amountOfAliveNeighboursToLive = 3;
+                break;
+            case GameOfLifeRule.ThreeDimension:
+                minAmountOfAliveNeighbours = 5;
+                maxAmountOfAliveNeighbours = 6;
+                amountOfAliveNeighboursToLive = 4;
+                break;
+            default:
+                break;
+        }
+    }
 
     void Start() => OnPlayOnStart();
 
