@@ -410,6 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectionSizeOffset: 0
   defaultCameraRotation: {x: 45, y: 45, z: 0}
+  timeToRotate: 0.5
   timeToFixRotation: 0.1
   rotationStep: 45
 --- !u!1 &1504666001
@@ -477,7 +478,7 @@ MonoBehaviour:
   gridCellManager: {fileID: 1744172854}
   playOnStart: 1
   timeBetweenEachIteration: 0.1
-  aliveCellsPattern: 1
+  aliveCellsPattern: 7
   patternPosition: {x: 9, y: 9, z: 9}
   minAmountOfAliveNeighbours: 5
   maxAmountOfAliveNeighbours: 6
