@@ -16,19 +16,28 @@ public class CameraPosition : MonoBehaviour
 
     void Start()
     {
-        _cam = Camera.main;
-        _transform = transform;
-        _initialPosition = _transform.position;
-        SetLocalPositionWithOffset();
+        SetInitialValues();
+        SetPositionWithOffset();
         SetSizeProjection();
-        _transform.eulerAngles = defaultCameraRotation;
     }
     void Update()
     {
-        if (!Input.GetMouseButton(0) && Input.GetMouseButton(1))
-            FixCurrentRotationToStep(_newWorldMousePosition, rotationStep);
-        else
-            OnLeftMouseButton();
+        OnRightButton();
+        OnLeftMouseButton();
+    }
+
+    void SetInitialValues()
+    {
+        _cam = Camera.main;
+        _transform = transform;
+        _initialPosition = _transform.position;
+        _transform.eulerAngles = defaultCameraRotation;
+    }
+
+    void OnRightButton()
+    {
+        if (!Input.GetMouseButton(1)) return;
+        FixCurrentRotationToStep(_newWorldMousePosition, rotationStep);
     }
 
     void OnLeftMouseButton()
@@ -43,7 +52,6 @@ public class CameraPosition : MonoBehaviour
         _previousWorldMousePosition = _newWorldMousePosition;
 
         RotateCameraToDirection(direction);
-
     }
 
     void RotateCameraToDirection(Vector3 direction)
@@ -68,7 +76,7 @@ public class CameraPosition : MonoBehaviour
         _transform.rotation = Quaternion.Lerp(_transform.rotation, targetRotation, timeToFixRotation);
     }
 
-    void SetLocalPositionWithOffset()
+    void SetPositionWithOffset()
     {
         _transform.position = new(
             _initialPosition.x + (GridCellManager.s_gridSize.x - 1) / 2,
