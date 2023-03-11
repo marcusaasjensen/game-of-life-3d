@@ -127,5 +127,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCell: {fileID: 12393739875170593}
-  neighboursList: []
   isCellAliveOnNextGeneration: 0
