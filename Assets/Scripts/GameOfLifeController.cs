@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
 {
-    private enum GameOfLifeRule { TwoDimension, ThreeDimension, Custom };
+    private enum GameOfLifeRules { TwoDimension, ThreeDimension, Custom };
 
     [SerializeField] private GridCellManager gridCellManager;
 
@@ -17,45 +17,57 @@ public class GameOfLifeController : MonoBehaviour
     [Header("Pattern Editing")]
     [SerializeField] private AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern;
     [SerializeField] private Vector3Int patternPosition = Vector3Int.zero;
-
-    [FormerlySerializedAs("rule")]
+    
+    [FormerlySerializedAs("ruleOnStart")]
     [Header("Rules")]
-    [SerializeField] private GameOfLifeRule ruleOnStart;
+    [SerializeField] private GameOfLifeRules rulesOnStart;
     [Header("Custom Rules")]
     [SerializeField] private int minAmountOfAliveNeighbours = 5;
     [SerializeField] private int maxAmountOfAliveNeighbours = 6;
     [SerializeField] private int amountOfAliveNeighboursToLive = 4;
 
-    //These default numbers are the 3D equivalent of the rules in 2D.
-
-    private bool _allCellsDead;
+    //These default numbers are what I prefer as the 3D equivalent of the 2D Game Of Life rules. It is more interesting to look at.
+    
     private bool _isGameRunning;
     private IEnumerator _currentGameCoroutine;
 
+    public static int NumberOfAliveCells { get; private set; }
     public static int NumberOfGenerations { get; private set; }
     public GridCellManager GridCellManager => gridCellManager;
     public Vector3Int InitialPatternPosition => patternPosition;
     public AliveCellsPatternLibrary.AliveCellsPatternName AliveCellsPattern => aliveCellsPattern;
 
-    private void Awake()
+    private void Awake() => SetRules();
+
+    private void SetRules()
     {
-        switch(ruleOnStart)
+        switch(rulesOnStart)
         {
-            case GameOfLifeRule.TwoDimension:
-                minAmountOfAliveNeighbours = 2;
-                maxAmountOfAliveNeighbours = 3;
-                amountOfAliveNeighboursToLive = 3;
+            case GameOfLifeRules.TwoDimension:
+                Set2DRules();
                 break;
-            case GameOfLifeRule.ThreeDimension:
-                minAmountOfAliveNeighbours = 5;
-                maxAmountOfAliveNeighbours = 6;
-                amountOfAliveNeighboursToLive = 4;
+            case GameOfLifeRules.ThreeDimension:
+                Set3DRules();
                 break;
-            case GameOfLifeRule.Custom:
+            case GameOfLifeRules.Custom:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void Set2DRules()
+    {
+        minAmountOfAliveNeighbours = 2;
+        maxAmountOfAliveNeighbours = 3;
+        amountOfAliveNeighboursToLive = 3;
+    }
+
+    private void Set3DRules()
+    {
+        minAmountOfAliveNeighbours = 5;
+        maxAmountOfAliveNeighbours = 6;
+        amountOfAliveNeighboursToLive = 4;
     }
 
     private void Start() => OnPlayOnStart();
@@ -80,31 +92,30 @@ public class GameOfLifeController : MonoBehaviour
     {
         foreach (var cell in GridCellManager.CellGrid)
             cell.SetCellStateOnNextGenerationWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
-        ActualizeAllCellState();
+        UpdateAllCellState();
     }
 
     private void SkipGeneration()
     {
         foreach (var cell in GridCellManager.CellGrid)
             cell.DontChangeOnNextGeneration();
-        ActualizeAllCellState();
+        UpdateAllCellState();
     }
 
-    private void ActualizeAllCellState()
+    private void UpdateAllCellState()
     {
-        _allCellsDead = true;
+        NumberOfAliveCells = 0;
 
         foreach (var cell in GridCellManager.CellGrid)
         {
             cell.UpdateState();
             gridCellManager.SortCellGameObject(cell.CurrentCell);
-            
-            if(cell.CurrentCell.IsAlive)
-                _allCellsDead = false;
-        }
 
-        if(!_allCellsDead)
-            NumberOfGenerations++;
+            if (cell.CurrentCell.IsAlive)
+                NumberOfAliveCells++;
+        }
+        
+        NumberOfGenerations = NumberOfAliveCells > 0 ? NumberOfGenerations + 1 : NumberOfGenerations;
     }
 
     [ContextMenu("Game Of Life/Start Game Of Life")]

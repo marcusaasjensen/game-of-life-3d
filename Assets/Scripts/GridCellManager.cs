@@ -9,6 +9,7 @@ public class GridCellManager : MonoBehaviour
 
     public static CellStateController[,,] CellGrid;
     public static Vector3Int GridSize;
+    public static int NumberOfCells { get; private set; }
     public Vector3Int GridSizeProperty => gridSizeProperty;
 
     private void Awake()
@@ -37,6 +38,7 @@ public class GridCellManager : MonoBehaviour
         var cell = Instantiate(cellPrefab, position, Quaternion.identity);
         cell.SetParent(deadCellsParent);
         CellGrid[position.x, position.y, position.z] = cell.GetComponent<CellStateController>();
+        NumberOfCells++;
     }
 
     private void SetCellNeighbours()
