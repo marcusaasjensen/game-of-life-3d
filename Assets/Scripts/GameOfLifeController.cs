@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
@@ -17,8 +18,9 @@ public class GameOfLifeController : MonoBehaviour
     [SerializeField] private AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern;
     [SerializeField] private Vector3Int patternPosition = Vector3Int.zero;
 
+    [FormerlySerializedAs("rule")]
     [Header("Rules")]
-    [SerializeField] private GameOfLifeRule rule;
+    [SerializeField] private GameOfLifeRule ruleOnStart;
     [Header("Custom Rules")]
     [SerializeField] private int minAmountOfAliveNeighbours = 5;
     [SerializeField] private int maxAmountOfAliveNeighbours = 6;
@@ -37,7 +39,7 @@ public class GameOfLifeController : MonoBehaviour
 
     private void Awake()
     {
-        switch(rule)
+        switch(ruleOnStart)
         {
             case GameOfLifeRule.TwoDimension:
                 minAmountOfAliveNeighbours = 2;

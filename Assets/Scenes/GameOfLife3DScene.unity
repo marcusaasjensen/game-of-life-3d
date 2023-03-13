@@ -730,9 +730,9 @@ MonoBehaviour:
   timeBetweenEachIteration: 0.1
   aliveCellsPattern: 1
   patternPosition: {x: 9, y: 9, z: 9}
-  rule: 1
-  minAmountOfAliveNeighbours: 5
-  maxAmountOfAliveNeighbours: 6
+  ruleOnStart: 1
+  minAmountOfAliveNeighbours: 3
+  maxAmountOfAliveNeighbours: 4
   amountOfAliveNeighboursToLive: 4
 --- !u!4 &1744172853
 Transform:

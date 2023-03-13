@@ -15,6 +15,7 @@ public class CameraPosition : MonoBehaviour
     private Vector3 _previousWorldMousePosition;
     private Vector3 _newWorldMousePosition;
 
+    private bool _fixRotationControlUsed;
     private void Start()
     {
         SetInitialValues();
@@ -23,8 +24,8 @@ public class CameraPosition : MonoBehaviour
     }
     private void Update()
     {
-        OnRightButton();
-        OnLeftMouseButton();
+        OnFixRotationControl();
+        OnRotateCameraControl();
     }
 
     private void SetInitialValues()
@@ -34,16 +35,16 @@ public class CameraPosition : MonoBehaviour
         _initialPosition = _transform.position;
         _transform.eulerAngles = defaultCameraRotation;
     }
-
-    private void OnRightButton()
+    private void OnFixRotationControl()
     {
-        if (!Input.GetMouseButton(1)) return;
+        _fixRotationControlUsed = Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftControl);
+        if (!_fixRotationControlUsed) return;
         FixCurrentRotationToStep(_newWorldMousePosition, rotationStep);
     }
 
-    private void OnLeftMouseButton()
+    private void OnRotateCameraControl()
     {
-        if (Input.GetMouseButton(1)) return;
+        if (_fixRotationControlUsed) return;
 
         if (Input.GetMouseButtonDown(0))
             _previousWorldMousePosition = _cam.ScreenToViewportPoint(Input.mousePosition);
