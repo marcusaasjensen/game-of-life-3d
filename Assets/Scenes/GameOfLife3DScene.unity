@@ -733,9 +733,9 @@ MonoBehaviour:
   aliveCellsPattern: 1
   patternPosition: {x: 9, y: 9, z: 9}
   rulesOnStart: 1
-  minAmountOfAliveNeighbours: 3
-  maxAmountOfAliveNeighbours: 4
-  amountOfAliveNeighboursToLive: 4
+  minAmountOfAliveNeighbours: 2
+  maxAmountOfAliveNeighbours: 3
+  amountOfAliveNeighboursToLive: 3
 --- !u!4 &1744172853
 Transform:
   m_ObjectHideFlags: 0

@@ -1,14 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class CellStateController : MonoBehaviour
 {
     [SerializeField] private Cell currentCell;
-    [SerializeField] private bool isCellAliveOnNextGeneration;
-    
-    private readonly HashSet<Cell> _surroundingNeighbours = new();
+    private readonly HashSet<CellStateController> _surroundingNeighbours = new();
     public Cell CurrentCell => currentCell;
+    private int NumberOfLivingNeighbours { get; set; }
 
     public void AddAllCellNeighbours(CellStateController[,,] cellList, Vector3Int gridSize)
     {
@@ -23,40 +21,37 @@ public class CellStateController : MonoBehaviour
         var maxZ = Mathf.Min(cell.z + 1, gridSize.z - 1);
 
         for (var i = minX; i <= maxX; i++) for (var j = minY; j <= maxY; j++) for (var k = minZ; k <= maxZ; k++)
-                    _surroundingNeighbours.Add(cellList[i, j, k].CurrentCell);
+                    _surroundingNeighbours.Add(cellList[i, j, k]);
 
-        _surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z].CurrentCell);
+        _surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z]);
     }
 
-    public void SetCellStateOnNextGenerationWithRules(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
+    public void UpdateNeighbourCells()
     {
-        var nbOfLivingNeighbours = _surroundingNeighbours.Count(cell => cell.IsAlive);
+        if (!currentCell.IsAlive) return;
+        foreach (var neighbour in _surroundingNeighbours)
+            neighbour.NumberOfLivingNeighbours++;
+    }
 
-        if (nbOfLivingNeighbours == amountOfAliveNeighboursToLive && !currentCell.IsAlive)
+    public void UpdateStateWithRules(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
+    {
+        if (NumberOfLivingNeighbours == amountOfAliveNeighboursToLive && !currentCell.IsAlive)
         {
-            isCellAliveOnNextGeneration = true;
+            currentCell.Live();
+            NumberOfLivingNeighbours = 0;
             return;
         }
-
-        var isUnderpopulated = nbOfLivingNeighbours < minAmountOfAliveNeighbours;
-        var isOverpopulated = nbOfLivingNeighbours > maxAmountOfAliveNeighbours;
+            
+        var isUnderpopulated = NumberOfLivingNeighbours < minAmountOfAliveNeighbours;
+        var isOverpopulated = NumberOfLivingNeighbours > maxAmountOfAliveNeighbours;
 
         if (isUnderpopulated || isOverpopulated)
         {
-            isCellAliveOnNextGeneration = false;
+            currentCell.Die();
+            NumberOfLivingNeighbours = 0;
             return;
         }
         
-        DontChangeOnNextGeneration();
-    }
-
-    public void DontChangeOnNextGeneration() => isCellAliveOnNextGeneration = currentCell.IsAlive;
-
-    public void UpdateState()
-    {
-        if (isCellAliveOnNextGeneration) 
-            currentCell.Live();
-        else
-            currentCell.Die();
+        NumberOfLivingNeighbours = 0;
     }
 }

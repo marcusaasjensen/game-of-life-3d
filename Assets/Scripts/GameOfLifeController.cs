@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [RequireComponent(typeof(GridCellManager))]
 public class GameOfLifeController : MonoBehaviour
@@ -18,14 +17,13 @@ public class GameOfLifeController : MonoBehaviour
     [SerializeField] private AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern;
     [SerializeField] private Vector3Int patternPosition = Vector3Int.zero;
     
-    [FormerlySerializedAs("ruleOnStart")]
     [Header("Rules")]
     [SerializeField] private GameOfLifeRules rulesOnStart;
     [Header("Custom Rules")]
     [SerializeField] private int minAmountOfAliveNeighbours = 5;
     [SerializeField] private int maxAmountOfAliveNeighbours = 6;
     [SerializeField] private int amountOfAliveNeighboursToLive = 4;
-
+    
     //These default numbers are what I prefer as the 3D equivalent of the 2D Game Of Life rules. It is more interesting to look at.
     
     private bool _isGameRunning;
@@ -75,40 +73,28 @@ public class GameOfLifeController : MonoBehaviour
     private void OnPlayOnStart()
     {
         if (!playOnStart) return;
-        InstantiateInitialAliveCellsPattern();
+        SetInitialAliveCells(aliveCellsPattern, patternPosition);
         StartGameOfLife();
     }
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
-    private void InstantiateInitialAliveCellsPattern()
-    {
-        SetInitialAliveCells(aliveCellsPattern, patternPosition);
-        SkipGeneration();
-    }
+    private void InstantiateInitialAliveCellsPattern() => SetInitialAliveCells(aliveCellsPattern, patternPosition);
     private static void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.SetAliveCellsPattern(aliveCellsPattern, initialPosition);
 
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
     {
-        foreach (var cell in GridCellManager.CellGrid)
-            cell.SetCellStateOnNextGenerationWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
-        UpdateAllCellState();
-    }
-
-    private void SkipGeneration()
-    {
-        foreach (var cell in GridCellManager.CellGrid)
-            cell.DontChangeOnNextGeneration();
+        foreach (var aliveCell in GridCellManager.CellGrid)
+            aliveCell.UpdateNeighbourCells();
         UpdateAllCellState();
     }
 
     private void UpdateAllCellState()
     {
         NumberOfAliveCells = 0;
-
         foreach (var cell in GridCellManager.CellGrid)
         {
-            cell.UpdateState();
+            cell.UpdateStateWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
             gridCellManager.SortCellGameObject(cell.CurrentCell);
 
             if (cell.CurrentCell.IsAlive)
