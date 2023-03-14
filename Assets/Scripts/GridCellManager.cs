@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridCellManager : MonoBehaviour
@@ -9,8 +10,10 @@ public class GridCellManager : MonoBehaviour
 
     public static CellStateController[,,] CellGrid;
     public static Vector3Int GridSize;
+    public static readonly HashSet<CellStateController> AllAliveCells = new();
     public static int NumberOfCells { get; private set; }
     public Vector3Int GridSizeProperty => gridSizeProperty;
+    public static int NumberOfAliveCells => AllAliveCells.Count;
 
     private void Awake()
     {
@@ -47,7 +50,27 @@ public class GridCellManager : MonoBehaviour
             cell.AddAllCellNeighbours(CellGrid, gridSizeProperty);
     }
     public static Cell GetCellAtPosition(Vector3Int position) => IsPositionInsideZone(Vector3.zero, GridSize, position) ? CellGrid[position.x, position.y,position.z].CurrentCell : null;
-    public void SortCellGameObject(Cell cell) => cell.transform.SetParent(cell.IsAlive ? aliveCellsParent : deadCellsParent);
+
+    public void SortCell(CellStateController cell)
+    {
+        if (cell.CurrentCell.IsAlive)
+        {
+            cell.transform.SetParent(aliveCellsParent);
+            AllAliveCells.Add(cell);
+        }
+        else
+        {
+            cell.transform.SetParent(deadCellsParent);
+            AllAliveCells.Remove(cell);
+        }
+    }
+
+    public void SortAllCells()
+    {
+        foreach(var cell in CellGrid)
+            SortCell(cell);
+    }
+
     public bool IsInsideGrid(Vector3Int position) => IsPositionInsideZone(Vector3.zero, gridSizeProperty, position);
     private static bool IsPositionInsideZone(Vector3 startZonePosition, Vector3 endZonePosition, Vector3 position)
     {

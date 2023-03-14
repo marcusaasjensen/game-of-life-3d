@@ -28,8 +28,6 @@ public class GameOfLifeController : MonoBehaviour
     
     private bool _isGameRunning;
     private IEnumerator _currentGameCoroutine;
-
-    public static int NumberOfAliveCells { get; private set; }
     public static int NumberOfGenerations { get; private set; }
     public GridCellManager GridCellManager => gridCellManager;
     public Vector3Int InitialPatternPosition => patternPosition;
@@ -79,29 +77,29 @@ public class GameOfLifeController : MonoBehaviour
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
     private void InstantiateInitialAliveCellsPattern() => SetInitialAliveCells(aliveCellsPattern, patternPosition);
-    private static void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName aliveCellsPattern, Vector3Int initialPosition) => AliveCellsPatternLibrary.SetAliveCellsPattern(aliveCellsPattern, initialPosition);
+    private void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName pattern, Vector3Int initialPosition)
+    {
+        AliveCellsPatternLibrary.SetAliveCellsPattern(pattern, initialPosition);
+        GridCellManager.SortAllCells();
+    }
 
     [ContextMenu("Game Of Life/Move On To Next Generation")]
     public void MoveOnToNextGeneration()
     {
-        foreach (var aliveCell in GridCellManager.CellGrid)
-            aliveCell.UpdateNeighbourCells();
+        foreach (var aliveCell in GridCellManager.AllAliveCells)
+            aliveCell.UpdateNeighboursOfAliveCell();
         UpdateAllCellState();
     }
 
     private void UpdateAllCellState()
     {
-        NumberOfAliveCells = 0;
         foreach (var cell in GridCellManager.CellGrid)
         {
             cell.UpdateStateWithRules(minAmountOfAliveNeighbours, maxAmountOfAliveNeighbours, amountOfAliveNeighboursToLive);
-            gridCellManager.SortCellGameObject(cell.CurrentCell);
-
-            if (cell.CurrentCell.IsAlive)
-                NumberOfAliveCells++;
+            gridCellManager.SortCell(cell);
         }
         
-        NumberOfGenerations = NumberOfAliveCells > 0 ? NumberOfGenerations + 1 : NumberOfGenerations;
+        NumberOfGenerations = GridCellManager.NumberOfAliveCells > 0 ? NumberOfGenerations + 1 : NumberOfGenerations;
     }
 
     [ContextMenu("Game Of Life/Start Game Of Life")]

@@ -26,9 +26,8 @@ public class CellStateController : MonoBehaviour
         _surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z]);
     }
 
-    public void UpdateNeighbourCells()
+    public void UpdateNeighboursOfAliveCell()
     {
-        if (!currentCell.IsAlive) return;
         foreach (var neighbour in _surroundingNeighbours)
             neighbour.NumberOfLivingNeighbours++;
     }
@@ -46,11 +45,7 @@ public class CellStateController : MonoBehaviour
         var isOverpopulated = NumberOfLivingNeighbours > maxAmountOfAliveNeighbours;
 
         if (isUnderpopulated || isOverpopulated)
-        {
             currentCell.Die();
-            NumberOfLivingNeighbours = 0;
-            return;
-        }
         
         NumberOfLivingNeighbours = 0;
     }
