@@ -76,7 +76,12 @@ public class GameOfLifeController : MonoBehaviour
     }
 
     [ContextMenu("Game Of Life/Create Alive Cells Pattern")]
-    private void InstantiateInitialAliveCellsPattern() => SetInitialAliveCells(aliveCellsPattern, patternPosition);
+    private void CreateAliveCellsPattern()
+    {
+        SetInitialAliveCells(aliveCellsPattern, patternPosition);
+        print($"<color=green>New {aliveCellsPattern.ToString()} pattern created at position {patternPosition}.</color>");
+    }
+
     private void SetInitialAliveCells(AliveCellsPatternLibrary.AliveCellsPatternName pattern, Vector3Int initialPosition)
     {
         AliveCellsPatternLibrary.SetAliveCellsPattern(pattern, initialPosition);
@@ -107,6 +112,7 @@ public class GameOfLifeController : MonoBehaviour
     {
         StopGameOfLifeCoroutine();
         StartGameOfLifeCoroutine();
+        print("<color=green>Game Of Life is playing...</color>");
     }
 
     [ContextMenu("Game Of Life/Reset Game of Life")]
@@ -114,8 +120,13 @@ public class GameOfLifeController : MonoBehaviour
     {
         foreach (var cell in GridCellManager.CellGrid)
             cell.CurrentCell.Die();
+        GridCellManager.SortAllCells();
         MoveOnToNextGeneration();
         NumberOfGenerations = 0;
+        
+        print("<color=green>Reset of Game Of Life.</color>");
+        if (_isGameRunning)
+            print("<color=orange>Game is still running.</color>");
     }
 
     private void StartGameOfLifeCoroutine()
@@ -125,6 +136,12 @@ public class GameOfLifeController : MonoBehaviour
     }
 
     [ContextMenu("Game Of Life/Pause Game Of Life")]
+    private void PauseGameOfLife()
+    {
+        StopGameOfLifeCoroutine();
+        print("<color=green>Game Of Life Paused.</color>");
+    }
+
     private void StopGameOfLifeCoroutine()
     {
         _isGameRunning = false;
