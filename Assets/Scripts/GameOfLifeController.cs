@@ -118,15 +118,20 @@ public class GameOfLifeController : MonoBehaviour
     [ContextMenu("Game Of Life/Reset Game of Life")]
     private void ResetGameOfLife()
     {
-        foreach (var cell in GridCellManager.CellGrid)
-            cell.CurrentCell.Die();
-        GridCellManager.SortAllCells();
+        SetAllCellsToDeadState();
         MoveOnToNextGeneration();
         NumberOfGenerations = 0;
         
         print("<color=green>Reset of Game Of Life.</color>");
         if (_isGameRunning)
             print("<color=orange>Game is still running.</color>");
+    }
+
+    private void SetAllCellsToDeadState()
+    {
+        foreach (var cell in GridCellManager.CellGrid)
+            cell.CurrentCell.Die();
+        GridCellManager.SortAllCells();
     }
 
     private void StartGameOfLifeCoroutine()
