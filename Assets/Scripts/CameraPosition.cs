@@ -38,18 +38,29 @@ public class CameraPosition : MonoBehaviour
     private void OnFixRotationControl()
     {
         _fixRotationControlUsed = Input.GetMouseButton(1) || Input.GetKey(KeyCode.LeftControl);
-        if (!_fixRotationControlUsed) return;
+        if (!_fixRotationControlUsed)
+        {
+            return;
+        }
         FixCurrentRotationToStep(_newWorldMousePosition, rotationStep);
     }
 
     private void OnRotateCameraControl()
     {
-        if (_fixRotationControlUsed) return;
+        if (_fixRotationControlUsed)
+        {
+            return;
+        }
 
         if (Input.GetMouseButtonDown(0))
+        {
             _previousWorldMousePosition = _cam.ScreenToViewportPoint(Input.mousePosition);
+        }
 
-        if (!Input.GetMouseButton(0)) return;
+        if (!Input.GetMouseButton(0))
+        {
+            return;
+        }
 
         _newWorldMousePosition = Vector3.Lerp(_previousWorldMousePosition, _cam.ScreenToViewportPoint(Input.mousePosition), timeToFixRotation);
         var direction = _previousWorldMousePosition - _newWorldMousePosition;

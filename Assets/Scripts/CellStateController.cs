@@ -20,8 +20,16 @@ public class CellStateController : MonoBehaviour
         var maxY = Mathf.Min(cell.y + 1, gridSize.y - 1);
         var maxZ = Mathf.Min(cell.z + 1, gridSize.z - 1);
 
-        for (var i = minX; i <= maxX; i++) for (var j = minY; j <= maxY; j++) for (var k = minZ; k <= maxZ; k++)
+        for (var i = minX; i <= maxX; i++)
+        {
+            for (var j = minY; j <= maxY; j++)
+            {
+                for (var k = minZ; k <= maxZ; k++)
+                {
                     _surroundingNeighbours.Add(cellList[i, j, k]);
+                }
+            }
+        }
 
         _surroundingNeighbours.Remove(cellList[cell.x, cell.y, cell.z]);
     }
@@ -29,7 +37,9 @@ public class CellStateController : MonoBehaviour
     public void UpdateNeighboursOfAliveCell()
     {
         foreach (var neighbour in _surroundingNeighbours)
+        {
             neighbour.NumberOfLivingNeighbours++;
+        }
     }
 
     public void UpdateStateWithRules(int minAmountOfAliveNeighbours, int maxAmountOfAliveNeighbours, int amountOfAliveNeighboursToLive)
@@ -45,7 +55,9 @@ public class CellStateController : MonoBehaviour
         var isOverpopulated = NumberOfLivingNeighbours > maxAmountOfAliveNeighbours;
 
         if (isUnderpopulated || isOverpopulated)
+        {
             currentCell.Die();
+        }
         
         NumberOfLivingNeighbours = 0;
     }

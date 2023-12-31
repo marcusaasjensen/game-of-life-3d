@@ -31,9 +31,15 @@ public class GridCellManager : MonoBehaviour
     private void InstantiateAllCells()
     {
         for (var i = 0; i < GridSize.x; i++)
+        {
             for (var j = 0; j < GridSize.y; j++)
+            {
                 for (var k = 0; k < GridSize.z; k++)
+                {
                     InstantiateCell(new Vector3Int(i, j, k));
+                }
+            }
+        }
     }
 
     private void InstantiateCell(Vector3Int position)
@@ -47,7 +53,9 @@ public class GridCellManager : MonoBehaviour
     private void SetCellNeighbours()
     {
         foreach (var cell in CellGrid)
+        {
             cell.AddAllCellNeighbours(CellGrid, gridSizeProperty);
+        }
     }
     public static Cell GetCellAtPosition(Vector3Int position) => IsPositionInsideZone(Vector3.zero, GridSize, position) ? CellGrid[position.x, position.y,position.z].CurrentCell : null;
 
@@ -67,8 +75,10 @@ public class GridCellManager : MonoBehaviour
 
     public void SortAllCells()
     {
-        foreach(var cell in CellGrid)
+        foreach (var cell in CellGrid)
+        {
             SortCell(cell);
+        }
     }
 
     public bool IsInsideGrid(Vector3Int position) => IsPositionInsideZone(Vector3.zero, gridSizeProperty, position);

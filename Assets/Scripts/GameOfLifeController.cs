@@ -70,7 +70,10 @@ public class GameOfLifeController : MonoBehaviour
 
     private void OnPlayOnStart()
     {
-        if (!playOnStart) return;
+        if (!playOnStart)
+        {
+            return;
+        }
         SetInitialAliveCells(aliveCellsPattern, patternPosition);
         StartGameOfLife();
     }
@@ -92,7 +95,9 @@ public class GameOfLifeController : MonoBehaviour
     public void MoveOnToNextGeneration()
     {
         foreach (var aliveCell in GridCellManager.AllAliveCells)
+        {
             aliveCell.UpdateNeighboursOfAliveCell();
+        }
         UpdateAllCellState();
     }
 
@@ -124,13 +129,17 @@ public class GameOfLifeController : MonoBehaviour
         
         print("<color=green>Reset of Game Of Life.</color>");
         if (_isGameRunning)
+        {
             print("<color=orange>Game is still running.</color>");
+        }
     }
 
     private void SetAllCellsToDeadState()
     {
         foreach (var cell in GridCellManager.CellGrid)
+        {
             cell.CurrentCell.Die();
+        }
         GridCellManager.SortAllCells();
     }
 
@@ -151,7 +160,9 @@ public class GameOfLifeController : MonoBehaviour
     {
         _isGameRunning = false;
         if (_currentGameCoroutine != null)
+        {
             StopCoroutine(_currentGameCoroutine);
+        }
     }
 
     private IEnumerator GameOfLifeCoroutine()

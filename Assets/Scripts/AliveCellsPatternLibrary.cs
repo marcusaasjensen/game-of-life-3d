@@ -31,7 +31,10 @@ public abstract class AliveCellsPatternLibrary
         foreach (var coordinate in patternCoordinates)
         { 
             var cell = GridCellManager.GetCellAtPosition(coordinate);
-            if(cell) cell.Live();
+            if (cell)
+            {
+                cell.Live();
+            }
         }
     }
 
